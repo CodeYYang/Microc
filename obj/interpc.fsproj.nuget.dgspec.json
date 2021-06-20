@@ -1,0 +1,67 @@
+{
+  "format": 1,
+  "restore": {
+    "c:\\Users\\15929\\Desktop\\编译原理\\microc\\interpc.fsproj": {}
+  },
+  "projects": {
+    "c:\\Users\\15929\\Desktop\\编译原理\\microc\\interpc.fsproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "c:\\Users\\15929\\Desktop\\编译原理\\microc\\interpc.fsproj",
+        "projectName": "interpc",
+        "projectPath": "c:\\Users\\15929\\Desktop\\编译原理\\microc\\interpc.fsproj",
+        "packagesPath": "C:\\Users\\15929\\.nuget\\packages\\",
+        "outputPath": "c:\\Users\\15929\\Desktop\\编译原理\\microc\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\15929\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "https://nuget.cdn.azure.cn/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "FSharp.Core": {
+              "target": "Package",
+              "version": "[5.0.0, )",
+              "generatePathProperty": true
+            },
+            "FsLexYacc": {
+              "target": "Package",
+              "version": "[10.2.0, )",
+              "generatePathProperty": true
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
