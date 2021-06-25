@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\15929\\Desktop\\编译原理\\microc\\interpc.fsproj": {}
+    "c:\\Users\\15929\\Desktop\\编译原理\\microc\\microcc.fsproj": {}
   },
   "projects": {
-    "C:\\Users\\15929\\Desktop\\编译原理\\microc\\interpc.fsproj": {
+    "c:\\Users\\15929\\Desktop\\编译原理\\microc\\microcc.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\15929\\Desktop\\编译原理\\microc\\interpc.fsproj",
-        "projectName": "interpc",
-        "projectPath": "C:\\Users\\15929\\Desktop\\编译原理\\microc\\interpc.fsproj",
+        "projectUniqueName": "c:\\Users\\15929\\Desktop\\编译原理\\microc\\microcc.fsproj",
+        "projectName": "microcc",
+        "projectPath": "c:\\Users\\15929\\Desktop\\编译原理\\microc\\microcc.fsproj",
         "packagesPath": "C:\\Users\\15929\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\15929\\Desktop\\编译原理\\microc\\obj\\",
+        "outputPath": "c:\\Users\\15929\\Desktop\\编译原理\\microc\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\15929\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -40,7 +40,7 @@
             },
             "FsLexYacc": {
               "target": "Package",
-              "version": "[10.2.0, )",
+              "version": "[10.0.0, )",
               "generatePathProperty": true
             }
           },

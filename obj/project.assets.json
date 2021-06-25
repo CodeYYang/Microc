@@ -206,11 +206,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\15929\\Desktop\\编译原理\\microc\\interpc.fsproj",
+      "projectUniqueName": "C:\\Users\\15929\\Desktop\\编译原理\\microc\\interpc.fsproj",
       "projectName": "interpc",
-      "projectPath": "c:\\Users\\15929\\Desktop\\编译原理\\microc\\interpc.fsproj",
+      "projectPath": "C:\\Users\\15929\\Desktop\\编译原理\\microc\\interpc.fsproj",
       "packagesPath": "C:\\Users\\15929\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\15929\\Desktop\\编译原理\\microc\\obj\\",
+      "outputPath": "C:\\Users\\15929\\Desktop\\编译原理\\microc\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\15929\\AppData\\Roaming\\NuGet\\NuGet.Config"

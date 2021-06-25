@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\15929\\Desktop\\编译原理\\microc\\interpc.fsproj": {}
+    "c:\\Users\\15929\\Desktop\\编译原理\\microc\\machine.csproj": {}
   },
   "projects": {
-    "C:\\Users\\15929\\Desktop\\编译原理\\microc\\interpc.fsproj": {
+    "c:\\Users\\15929\\Desktop\\编译原理\\microc\\machine.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\15929\\Desktop\\编译原理\\microc\\interpc.fsproj",
-        "projectName": "interpc",
-        "projectPath": "C:\\Users\\15929\\Desktop\\编译原理\\microc\\interpc.fsproj",
+        "projectUniqueName": "c:\\Users\\15929\\Desktop\\编译原理\\microc\\machine.csproj",
+        "projectName": "machine",
+        "projectPath": "c:\\Users\\15929\\Desktop\\编译原理\\microc\\machine.csproj",
         "packagesPath": "C:\\Users\\15929\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\15929\\Desktop\\编译原理\\microc\\obj\\",
+        "outputPath": "c:\\Users\\15929\\Desktop\\编译原理\\microc\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\15929\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -27,23 +27,16 @@
             "targetAlias": "net5.0",
             "projectReferences": {}
           }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
         }
       },
       "frameworks": {
         "net5.0": {
           "targetAlias": "net5.0",
-          "dependencies": {
-            "FSharp.Core": {
-              "target": "Package",
-              "version": "[5.0.0, )",
-              "generatePathProperty": true
-            },
-            "FsLexYacc": {
-              "target": "Package",
-              "version": "[10.2.0, )",
-              "generatePathProperty": true
-            }
-          },
           "imports": [
             "net461",
             "net462",
