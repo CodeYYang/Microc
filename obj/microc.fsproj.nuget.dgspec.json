@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\15929\\Desktop\\编译原理\\microc\\microc.fsproj": {}
+    "C:\\Users\\15929\\Desktop\\编译原理\\microc\\microc.fsproj": {}
   },
   "projects": {
-    "c:\\Users\\15929\\Desktop\\编译原理\\microc\\microc.fsproj": {
+    "C:\\Users\\15929\\Desktop\\编译原理\\microc\\microc.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\15929\\Desktop\\编译原理\\microc\\microc.fsproj",
+        "projectUniqueName": "C:\\Users\\15929\\Desktop\\编译原理\\microc\\microc.fsproj",
         "projectName": "microc",
-        "projectPath": "c:\\Users\\15929\\Desktop\\编译原理\\microc\\microc.fsproj",
+        "projectPath": "C:\\Users\\15929\\Desktop\\编译原理\\microc\\microc.fsproj",
         "packagesPath": "C:\\Users\\15929\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\15929\\Desktop\\编译原理\\microc\\obj\\",
+        "outputPath": "C:\\Users\\15929\\Desktop\\编译原理\\microc\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\15929\\AppData\\Roaming\\NuGet\\NuGet.Config"
