@@ -103,11 +103,7 @@ let rec addCST i C =
     | (0, IFNZRO lab :: C1) -> C1
     | (_, IFNZRO lab :: C1) -> addGOTO lab C1
     | _                     -> CSTI i :: C
-
-let rec addCSTF i C =
-    match (i, C) with
-    | _                     -> (CSTF (System.BitConverter.ToInt32((System.BitConverter.GetBytes(float32(i)), 0)))) :: C
-
+            
 (* ------------------------------------------------------------------- *)
 
 (* Simple environment operations *)
@@ -249,31 +245,13 @@ and cExpr (e : expr) (varEnv : VarEnv) (funEnv : FunEnv) (C : instr list) : inst
     | Access acc     -> cAccess acc varEnv funEnv (LDI :: C)
     | Assign(acc, e) -> cAccess acc varEnv funEnv (cExpr e varEnv funEnv (STI :: C))
     | CstI i         -> addCST i C
-    | ConstFloat i      -> addCSTF i C
     | Addr acc       -> cAccess acc varEnv funEnv C
     | Prim1(ope, e1) ->
-      let rec tmp stat =
-                  match stat with
-                  | Access (c) -> c               //get IAccess
       cExpr e1 varEnv funEnv
           (match ope with
            | "!"      -> addNOT C
            | "printi" -> PRINTI :: C
            | "printc" -> PRINTC :: C
-           | "I++" -> 
-                let ass = Assign (tmp e1, Prim2 ("+",Access (tmp e1),CstI 1))
-                cExpr ass varEnv funEnv  (addINCSP -1 C)
-           | "I--" ->
-                let ass = Assign (tmp e1,Prim2 ("-",Access (tmp e1),CstI 1))
-                cExpr ass varEnv funEnv  (addINCSP -1 C)
-           | "++I" -> 
-                let ass = Assign (tmp e1,Prim2 ("+",Access (tmp e1),CstI 1))
-                let C1 = cExpr ass varEnv funEnv  C
-                CSTI 1 :: ADD :: (addINCSP -1 C1)
-           | "--I" -> 
-                let ass = Assign (tmp e1,Prim2 ("-",Access (tmp e1),CstI 1))
-                let C1 = cExpr ass varEnv funEnv  C
-                CSTI 1 :: SUB :: (addINCSP -1 C1)
            | _        -> failwith "unknown primitive 1")
     | Prim2(ope, e1, e2) ->
       cExpr e1 varEnv funEnv

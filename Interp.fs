@@ -104,7 +104,6 @@ type address = int
 
 type store = Map<address, int>
 
-type storefloat = Map<address, float32>
 //空存储
 let emptyStore = Map.empty<address, int>
 
@@ -193,6 +192,7 @@ let rec allocate (typ, x) (env0, nextloc) sto0 : locEnv * store =
         match typ with
         //数组 调用 initSto 分配 i 个空间
         | TypA (t, Some i) -> (nextloc + i, nextloc, initSto nextloc i sto0)
+        | TypS  -> (nextloc+128, nextloc, initSto nextloc 128 sto0)
         // 常规变量默认值是 0
         | _ -> (nextloc, 0, sto0)
 
@@ -292,10 +292,12 @@ and eval e locEnv gloEnv store : int * store =
         let (res, store2) = eval e locEnv gloEnv store1
         (res, setSto store2 loc res)
     | CstI i -> (i, store)
-    | ConstFloat i -> (int(i) , store)
+    | ConstChar c    -> ((int c), store)
+    | ConstString s  -> (s.Length,store)
     | Addr acc -> access acc locEnv gloEnv store
     | Prim1 (ope, e1) ->
         let (i1, store1) = eval e1 locEnv gloEnv store
+
         let res =
             match ope with
             | "!" -> if i1 = 0 then 1 else 0
@@ -305,12 +307,13 @@ and eval e locEnv gloEnv store : int * store =
             | "printc" ->
                 (printf "%c" (char i1)
                  i1)
-            | "I++" ->  i1 + 1
-            | "I--" ->  i1 - 1
-            | "++I" ->  i1 + 1
-            | "--I" ->  i1 - 1
+            | "W++" -> i1+1
+            | "++W" -> i1+1
+            | "W--" -> i1-1
+            | "--W" -> i1-1            
             | _ -> failwith ("unknown primitive " + ope)
-     
+
+
         (res, store1)
     | Prim2 (ope, e1, e2) ->
         let (i1, store1) = eval e1 locEnv gloEnv store

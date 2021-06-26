@@ -17,7 +17,6 @@ type instr =
   | Label of label                     (* symbolic label; pseudo-instruc. *)
   | FLabel of int * label                     (* symbolic label; pseudo-instruc. *)
   | CSTI of int                        (* constant                        *)
-  | CSTF of int32
   | OFFSET of int                        (* constant     偏移地址  x86     *) 
   | GVAR of int                        (* global var     全局变量  x86     *) 
   | ADD                                (* addition                        *)
@@ -171,8 +170,6 @@ let CODELDARGS = 24
 [<Literal>]
 let CODESTOP   = 25;
 
-[<Literal>]
-let CODECSTF    = 26;
 
 
 (* Bytecode emission, first pass: build environment that maps 
@@ -185,7 +182,6 @@ let makelabenv (addr, labenv) instr =
     | Label lab      -> (addr, (lab, addr) :: labenv)
     | FLabel (m,lab)      -> (addr, (lab, addr) :: labenv)
     | CSTI i         -> (addr+2, labenv)
-    | CSTF i         -> (addr+2, labenv)
     | GVAR i         -> (addr+2, labenv)
     | OFFSET i       -> (addr+2, labenv)
     | ADD            -> (addr+1, labenv)
@@ -224,7 +220,6 @@ let rec emitints getlab instr ints =
     | Label lab      -> ints
     | FLabel (m,lab) -> ints
     | CSTI i         -> CODECSTI   :: i :: ints
-    | CSTF i            -> CODECSTF     :: i            :: ints
     | GVAR i         -> CODECSTI   :: i :: ints
     | OFFSET i       -> CODECSTI   :: i :: ints
     | ADD            -> CODEADD    :: ints
@@ -309,7 +304,6 @@ let rec decomp ints : instr list =
     | CODEPRINTC :: ints_rest                         ->   PRINTC        :: decomp ints_rest
     | CODELDARGS :: ints_rest                         ->   LDARGS 0       :: decomp ints_rest
     | CODESTOP   :: ints_rest                         ->   STOP             :: decomp ints_rest
-    | CODECSTI   :: i :: ints_rest                    ->   CSTI i :: decomp ints_rest      
-    | CODECSTF   :: i :: ints_rest                  ->   CSTF i         :: decomp ints_rest    
+    | CODECSTI   :: i :: ints_rest                    ->   CSTI i :: decomp ints_rest       
     | _                                       ->    printf "%A" ints; failwith "unknow code"
 
