@@ -270,7 +270,19 @@ let rec exec stmt (locEnv: locEnv) (gloEnv: gloEnv) (store: store) : store =
                                loop store3
                           else store2
         loop store0
-    | SWITCH (expr * expr list   )
+    | Switch(e,body) ->
+        let (v,store1) = eval e locEnv gloEnv store
+        let rec fit l =
+          match l with
+          | [] -> store1
+          | Case(e1,body1) :: tail ->
+              let (v2,store2) = eval e1 locEnv gloEnv store
+              if v2 = v then exec body1 locEnv gloEnv store
+                        else fit tail
+        fit body
+
+    | Case (e,body) ->
+        exec body locEnv gloEnv store
     | Block stmts ->
 
         // 语句块 解释辅助函数 loop

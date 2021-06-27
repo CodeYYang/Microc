@@ -47,10 +47,9 @@ and stmt =
   | Return of expr option            (* Return from method          *)
   | Block of stmtordec list          (* Block: grouping and scope   *)
   // 语句块内部，可以是变量声明 或语句的列表
-  | For of expr*expr*expr*stmt     
-  | Case of expr * expr
-  | Switch of expr * expr list                                                             
-
+  | For of expr*expr*expr*stmt                                                                
+  | Switch of expr * stmt list       
+  | Case of expr * stmt              
 and stmtordec =                                                    
   | Dec of typ * string              (* Local variable declaration  *)
   | Stmt of stmt                     (* A statement                 *)
