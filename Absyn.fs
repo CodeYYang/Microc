@@ -14,6 +14,7 @@ type typ =
   | TypI                             (* Type int                    *)
   | TypC                             (* Type char                   *)
   | TypA of typ * int option         (* Array type                  *)
+  | TypF (*new*)
   | TypP of typ                      (* Pointer type                *)
   | TypS                             (* Type string                *)
 
@@ -29,6 +30,7 @@ and expr =                           // 表达式，右值
   | Andalso of expr * expr           (* Sequential and              *)
   | Orelse of expr * expr            (* Sequential or               *)
   | Call of string * expr list       (* Function call f(...)        *)
+  | ConstFloat of float32
   | ConstChar of char                (*constant char*) 
   | ConstString of string            (*constant string*)
   | Print of string * expr           
@@ -45,7 +47,9 @@ and stmt =
   | Return of expr option            (* Return from method          *)
   | Block of stmtordec list          (* Block: grouping and scope   *)
   // 语句块内部，可以是变量声明 或语句的列表
-  | For of expr*expr*expr*stmt                                                                  
+  | For of expr*expr*expr*stmt     
+  | Case of expr * expr
+  | Switch of expr * expr list                                                             
 
 and stmtordec =                                                    
   | Dec of typ * string              (* Local variable declaration  *)

@@ -270,6 +270,7 @@ let rec exec stmt (locEnv: locEnv) (gloEnv: gloEnv) (store: store) : store =
                                loop store3
                           else store2
         loop store0
+    | SWITCH (expr * expr list   )
     | Block stmts ->
 
         // 语句块 解释辅助函数 loop
@@ -314,6 +315,7 @@ and eval e locEnv gloEnv store : int * store =
     | CstI i -> (i, store)
     | ConstChar c    -> ((int c), store)
     | ConstString s  -> (s.Length,store)
+    | ConstFloat f -> ((int f),store)
     | Print (op , e1) ->    let (i1,store1) = 
                                 eval e1 locEnv gloEnv store
                             let res = 
@@ -321,6 +323,10 @@ and eval e locEnv gloEnv store : int * store =
                                 | "%c"   -> (printf "%c " (char i1); i1)
                                 | "%d"   -> (printf "%d " i1; i1)  
                                 | "%s"   -> (printf "%s " (string i1); i1) 
+                                | "%f"   -> (printf "%f " (float32 i1); i1)
+                                | "%x"   -> (printf "%x" i1; i1)
+                                | "%o"   -> (printf "%o" i1; i1)
+                                | _ ->  (printf "%s " (string "Not exist"); i1) 
                             (res, store1)
     | Addr acc -> access acc locEnv gloEnv store
     | Prim1 (ope, e1) ->

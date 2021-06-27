@@ -22,6 +22,7 @@ let keyword s =
     | "false"   -> CSTBOOL 0
     | "if"      -> IF
     | "int"     -> INT
+    | "float"   -> FLOAT
     | "null"    -> NULL
     | "print"   -> PRINT
     | "println" -> PRINTLN
@@ -30,7 +31,9 @@ let keyword s =
     | "void"    -> VOID 
     | "String"  -> STRING
     | "while"   -> WHILE  
-    | "for"     -> FOR     
+    | "for"     -> FOR
+    | "case"    -> CASE    
+    | "switch"  -> SWITCH     
     | _         -> NAME s   // 缺省情况，是标识符的名字，如 函数名，变量名等
                             // 当所有的关键字没有匹配成功时，则当成标识符
 // 字符串转义符处理函数
@@ -60,7 +63,8 @@ rule Token = parse          // 每个 规则rule 会生成为一个函数，函�
                             //  System.Int32.Parse 将 字符串转换为 int 类型
                             // 在 CPar 中  词元CSTINT 的语义值的类型是int  %token <int> CSTINT
                             //  CSTINT 需要一个整数作为参数
-
+  | ['0'-'9']+'.'['0'-'9']+ 
+                    { CSTFLOAT (System.Single.Parse (lexemeAsString lexbuf)) }  
   | ['a'-'z''A'-'Z']['a'-'z''A'-'Z''0'-'9']*
                     { keyword (lexemeAsString lexbuf) } //标识符处理
                                                        //先查是否是关键字，是则返回对应关键字的Token

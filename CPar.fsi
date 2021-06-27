@@ -40,6 +40,10 @@ type token =
   | WHILE
   | STRING
   | FOR
+  | SWITCH
+  | CASE
+  | FLOAT
+  | CSTFLOAT of (float32)
   | CSTCHAR of (char)
   | CSTSTRING of (string)
   | NAME of (string)
@@ -85,6 +89,10 @@ type tokenId =
     | TOKEN_WHILE
     | TOKEN_STRING
     | TOKEN_FOR
+    | TOKEN_SWITCH
+    | TOKEN_CASE    
+    | TOKEN_FLOAT
+    | TOKEN_CSTFLOAT
     | TOKEN_CSTCHAR
     | TOKEN_CSTSTRING
     | TOKEN_NAME
@@ -115,6 +123,7 @@ type nonTerminalId =
     | NONTERM_Exprs
     | NONTERM_Exprs1
     | NONTERM_Const
+    | NONTERM_ConstFloat
     | NONTERM_ConstString
     | NONTERM_ConstChar
     | NONTERM_Type
