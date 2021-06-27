@@ -221,7 +221,9 @@ let initEnvAndStore (topdecs: topdec list) : locEnv * funEnv * store =
 
         //全局函数 将声明(f,(xs,body))添加到全局函数环境 funEnv
         | Fundec (_, f, xs, body) :: decr -> addv decr locEnv ((f, (xs, body)) :: funEnv) store
-
+        | VardecAndAssignment (typ,x,e) :: decr ->
+          let (locEnv1, store1) = allocate (typ, x) locEnv store
+          addv decr locEnv1 funEnv store1 
     // ([], 0) []  默认全局环境
     // locEnv ([],0) 变量环境 ，变量定义为空列表[],下一个空闲地址为0
     // ([("n", 1); ("r", 0)], 2)  表示定义了 变量 n , r 下一个可以用的变量索引是 2
@@ -260,7 +262,14 @@ let rec exec stmt (locEnv: locEnv) (gloEnv: gloEnv) (store: store) : store =
         // _ 表示丢弃e的值,返回 变更后的环境store1
         let (_, store1) = eval e locEnv gloEnv store
         store1
-
+    | For ( dec,e1,opera,body ) ->
+        let (res , store0) = eval dec locEnv gloEnv store
+        let rec loop store1 = 
+            let (ifValue, store2) = eval e1 locEnv gloEnv store1
+            if ifValue<>0 then let (oneend ,store3) = eval opera locEnv gloEnv (exec body locEnv gloEnv store2)
+                               loop store3
+                          else store2
+        loop store0
     | Block stmts ->
 
         // 语句块 解释辅助函数 loop
@@ -279,6 +288,17 @@ and stmtordec stmtordec locEnv gloEnv store =
     match stmtordec with
     | Stmt stmt -> (locEnv, exec stmt locEnv gloEnv store)
     | Dec (typ, x) -> allocate (typ, x) locEnv store
+    | DecAndAssign (typ, x, e) -> let (loc,store1) = allocate (typ, x) locEnv store
+                                  let (loc1,store2) = access (AccVar x) loc gloEnv store
+                                  let (loc2,store3) = 
+                                        match e with
+                                        | ConstString s ->  let rec sign index stores=
+                                                                if index<s.Length then
+                                                                    sign (index+1) ( setSto stores (loc1-index-1) (int (s.Chars(index) ) ) )
+                                                                else stores
+                                                            ( s.Length   ,sign 0 store2) 
+                                        | _ ->  eval e loc gloEnv  store2
+                                  (loc, setSto store3 loc1 loc2)
 
 (* Evaluating micro-C expressions *)
 
@@ -294,6 +314,14 @@ and eval e locEnv gloEnv store : int * store =
     | CstI i -> (i, store)
     | ConstChar c    -> ((int c), store)
     | ConstString s  -> (s.Length,store)
+    | Print (op , e1) ->    let (i1,store1) = 
+                                eval e1 locEnv gloEnv store
+                            let res = 
+                                match op with
+                                | "%c"   -> (printf "%c " (char i1); i1)
+                                | "%d"   -> (printf "%d " i1; i1)  
+                                | "%s"   -> (printf "%s " (string i1); i1) 
+                            (res, store1)
     | Addr acc -> access acc locEnv gloEnv store
     | Prim1 (ope, e1) ->
         let (i1, store1) = eval e1 locEnv gloEnv store

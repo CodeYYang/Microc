@@ -1,5 +1,6 @@
 void main() {
-    String x;
-    x="sssss";
-    print x;
+    int x=0;
+    for(x;x<7;x=x+1){
+        print("%d",x);
+    }
 }

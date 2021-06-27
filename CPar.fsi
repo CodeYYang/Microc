@@ -39,6 +39,7 @@ type token =
   | VOID
   | WHILE
   | STRING
+  | FOR
   | CSTCHAR of (char)
   | CSTSTRING of (string)
   | NAME of (string)
@@ -83,6 +84,7 @@ type tokenId =
     | TOKEN_VOID
     | TOKEN_WHILE
     | TOKEN_STRING
+    | TOKEN_FOR
     | TOKEN_CSTCHAR
     | TOKEN_CSTSTRING
     | TOKEN_NAME
@@ -96,6 +98,7 @@ type nonTerminalId =
     | NONTERM_Topdecs
     | NONTERM_Topdec
     | NONTERM_Vardec
+    | NONTERM_VardecAndAssignment
     | NONTERM_Vardesc
     | NONTERM_Fundec
     | NONTERM_Paramdecs

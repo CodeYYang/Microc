@@ -201,19 +201,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\csupu\\.nuget\\packages\\": {}
+    "C:\\Users\\cs\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\作业\\编译原理大作业\\sigcc-plzoofs-master\\plzoofs\\microc\\interpc.fsproj",
+      "projectUniqueName": "C:\\Users\\cs\\Desktop\\编译作业\\sigcc-plzoofs-master\\sigcc-plzoofs-master\\plzoofs\\microc\\interpc.fsproj",
       "projectName": "interpc",
-      "projectPath": "D:\\作业\\编译原理大作业\\sigcc-plzoofs-master\\plzoofs\\microc\\interpc.fsproj",
-      "packagesPath": "C:\\Users\\csupu\\.nuget\\packages\\",
-      "outputPath": "D:\\作业\\编译原理大作业\\sigcc-plzoofs-master\\plzoofs\\microc\\obj\\",
+      "projectPath": "C:\\Users\\cs\\Desktop\\编译作业\\sigcc-plzoofs-master\\sigcc-plzoofs-master\\plzoofs\\microc\\interpc.fsproj",
+      "packagesPath": "C:\\Users\\cs\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\cs\\Desktop\\编译作业\\sigcc-plzoofs-master\\sigcc-plzoofs-master\\plzoofs\\microc\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\csupu\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\cs\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
