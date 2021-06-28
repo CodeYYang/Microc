@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\cs\\Desktop\\编译作业\\sigcc-plzoofs-master\\sigcc-plzoofs-master\\plzoofs\\microc\\microc.fsproj": {}
+    "D:\\gitcache\\microc\\microc.fsproj": {}
   },
   "projects": {
-    "C:\\Users\\cs\\Desktop\\编译作业\\sigcc-plzoofs-master\\sigcc-plzoofs-master\\plzoofs\\microc\\microc.fsproj": {
+    "D:\\gitcache\\microc\\microc.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\cs\\Desktop\\编译作业\\sigcc-plzoofs-master\\sigcc-plzoofs-master\\plzoofs\\microc\\microc.fsproj",
+        "projectUniqueName": "D:\\gitcache\\microc\\microc.fsproj",
         "projectName": "microc",
-        "projectPath": "C:\\Users\\cs\\Desktop\\编译作业\\sigcc-plzoofs-master\\sigcc-plzoofs-master\\plzoofs\\microc\\microc.fsproj",
+        "projectPath": "D:\\gitcache\\microc\\microc.fsproj",
         "packagesPath": "C:\\Users\\cs\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\cs\\Desktop\\编译作业\\sigcc-plzoofs-master\\sigcc-plzoofs-master\\plzoofs\\microc\\obj\\",
+        "outputPath": "D:\\gitcache\\microc\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\cs\\AppData\\Roaming\\NuGet\\NuGet.Config"

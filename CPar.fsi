@@ -12,6 +12,8 @@ type token =
   | COMMA
   | ASSIGN
   | AMP
+  | COLON
+  | QUES
   | NOT
   | SEQOR
   | SEQAND
@@ -32,6 +34,7 @@ type token =
   | ELSE
   | IF
   | INT
+  | FLOAT
   | NULL
   | PRINT
   | PRINTLN
@@ -40,6 +43,11 @@ type token =
   | WHILE
   | STRING
   | FOR
+  | DO
+  | DOWHILE
+  | SWITCH
+  | CASE
+  | CSTFLOAT of (float32)
   | CSTCHAR of (char)
   | CSTSTRING of (string)
   | NAME of (string)
@@ -57,6 +65,8 @@ type tokenId =
     | TOKEN_COMMA
     | TOKEN_ASSIGN
     | TOKEN_AMP
+    | TOKEN_COLON
+    | TOKEN_QUES
     | TOKEN_NOT
     | TOKEN_SEQOR
     | TOKEN_SEQAND
@@ -77,6 +87,7 @@ type tokenId =
     | TOKEN_ELSE
     | TOKEN_IF
     | TOKEN_INT
+    | TOKEN_FLOAT
     | TOKEN_NULL
     | TOKEN_PRINT
     | TOKEN_PRINTLN
@@ -85,6 +96,11 @@ type tokenId =
     | TOKEN_WHILE
     | TOKEN_STRING
     | TOKEN_FOR
+    | TOKEN_DO
+    | TOKEN_DOWHILE
+    | TOKEN_SWITCH
+    | TOKEN_CASE
+    | TOKEN_CSTFLOAT
     | TOKEN_CSTCHAR
     | TOKEN_CSTSTRING
     | TOKEN_NAME
@@ -107,6 +123,7 @@ type nonTerminalId =
     | NONTERM_StmtOrDecSeq
     | NONTERM_Stmt
     | NONTERM_StmtM
+    | NONTERM_ExecCase
     | NONTERM_StmtU
     | NONTERM_Expr
     | NONTERM_ExprNotAccess
@@ -115,6 +132,7 @@ type nonTerminalId =
     | NONTERM_Exprs
     | NONTERM_Exprs1
     | NONTERM_Const
+    | NONTERM_ConstFloat
     | NONTERM_ConstString
     | NONTERM_ConstChar
     | NONTERM_Type

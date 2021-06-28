@@ -258,6 +258,34 @@ let rec exec stmt (locEnv: locEnv) (gloEnv: gloEnv) (store: store) : store =
 
         loop store
 
+    | DoWhile (body, e) ->
+
+        let rec loop store1 =
+            //求值 循环条件,注意变更环境 store
+            let (v, store2) = eval e locEnv gloEnv store1
+            // 继续循环
+            if v <> 0 then
+                loop (exec body locEnv gloEnv store2)
+            else
+                store2 //退出循环返回 环境store2
+
+        let do_store = exec body locEnv gloEnv store
+        loop do_store
+
+    | Switch(e,body) ->
+        let (v,store1) = eval e locEnv gloEnv store
+        let rec fit l =
+          match l with
+          | [] -> store1
+          | Case(e1,body1) :: tail ->
+              let (v2,store2) = eval e1 locEnv gloEnv store
+              if v2 = v then exec body1 locEnv gloEnv store
+                        else fit tail
+        fit body
+
+    | Case (e,body) ->
+        exec body locEnv gloEnv store
+
     | Expr e ->
         // _ 表示丢弃e的值,返回 变更后的环境store1
         let (_, store1) = eval e locEnv gloEnv store
@@ -314,6 +342,7 @@ and eval e locEnv gloEnv store : int * store =
     | CstI i -> (i, store)
     | ConstChar c    -> ((int c), store)
     | ConstString s  -> (s.Length,store)
+    // | ConstFloat f   -> (float f,store)
     | Print (op , e1) ->    let (i1,store1) = 
                                 eval e1 locEnv gloEnv store
                             let res = 
@@ -361,8 +390,18 @@ and eval e locEnv gloEnv store : int * store =
             | ">=" -> if i1 >= i2 then 1 else 0
             | ">" -> if i1 > i2 then 1 else 0
             | _ -> failwith ("unknown primitive " + ope)
-
         (res, store2)
+
+    | Prim3 (cond, e1, e2) ->
+        let (v1,store1) = eval cond locEnv gloEnv store
+        if v1<>0 then
+            let (v2,store2) = eval e1 locEnv gloEnv store1
+            (v2,store2)
+        else
+            let (v2,store2) = eval e2 locEnv gloEnv store1
+            (v2,store2)
+
+    
     | Andalso (e1, e2) ->
         let (i1, store1) as res = eval e1 locEnv gloEnv store
 

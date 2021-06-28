@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\cs\\Desktop\\编译作业\\sigcc-plzoofs-master\\sigcc-plzoofs-master\\plzoofs\\microc\\interpc.fsproj": {}
+    "D:\\gitcache\\microc\\interpc.fsproj": {}
   },
   "projects": {
-    "C:\\Users\\cs\\Desktop\\编译作业\\sigcc-plzoofs-master\\sigcc-plzoofs-master\\plzoofs\\microc\\interpc.fsproj": {
+    "D:\\gitcache\\microc\\interpc.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\cs\\Desktop\\编译作业\\sigcc-plzoofs-master\\sigcc-plzoofs-master\\plzoofs\\microc\\interpc.fsproj",
+        "projectUniqueName": "D:\\gitcache\\microc\\interpc.fsproj",
         "projectName": "interpc",
-        "projectPath": "C:\\Users\\cs\\Desktop\\编译作业\\sigcc-plzoofs-master\\sigcc-plzoofs-master\\plzoofs\\microc\\interpc.fsproj",
+        "projectPath": "D:\\gitcache\\microc\\interpc.fsproj",
         "packagesPath": "C:\\Users\\cs\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\cs\\Desktop\\编译作业\\sigcc-plzoofs-master\\sigcc-plzoofs-master\\plzoofs\\microc\\obj\\",
+        "outputPath": "D:\\gitcache\\microc\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\cs\\AppData\\Roaming\\NuGet\\NuGet.Config"

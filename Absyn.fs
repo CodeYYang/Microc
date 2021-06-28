@@ -16,6 +16,7 @@ type typ =
   | TypA of typ * int option         (* Array type                  *)
   | TypP of typ                      (* Pointer type                *)
   | TypS                             (* Type string                *)
+  | TypeFloat   //不能赋值的
 
 
                                                                    
@@ -32,6 +33,10 @@ and expr =                           // 表达式，右值
   | ConstChar of char                (*constant char*) 
   | ConstString of string            (*constant string*)
   | Print of string * expr           
+  | ConstFloat of float32
+  | Prim3 of expr * expr * expr      (* Ternary primitive operator   *)
+
+  
                                                                    
 and access =                         //左值，存储的位置                                            
   | AccVar of string                 (* Variable access        x    *) 
@@ -45,7 +50,11 @@ and stmt =
   | Return of expr option            (* Return from method          *)
   | Block of stmtordec list          (* Block: grouping and scope   *)
   // 语句块内部，可以是变量声明 或语句的列表
-  | For of expr*expr*expr*stmt                                                                  
+  | For of expr*expr*expr*stmt 
+  | DoWhile of  stmt * expr        (* DoWhile loop                *)
+  | Switch of expr * stmt list       (* Switch def                  *)
+  | Case of expr * stmt              (* Case def                    *)
+                                                                 
 
 and stmtordec =                                                    
   | Dec of typ * string              (* Local variable declaration  *)
