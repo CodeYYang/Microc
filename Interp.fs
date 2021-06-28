@@ -257,6 +257,19 @@ let rec exec stmt (locEnv: locEnv) (gloEnv: gloEnv) (store: store) : store =
                 store2 //退出循环返回 环境store2
 
         loop store
+    | DoWhile (body, e) ->
+
+        let rec loop store1 =
+            //求值 循环条件,注意变更环境 store
+            let (v, store2) = eval e locEnv gloEnv store1
+            // 继续循环
+            if v <> 0 then
+                loop (exec body locEnv gloEnv store2)
+            else
+                store2 //退出循环返回 环境store2
+
+        let dostore = exec body locEnv gloEnv store
+        loop dostore
 
     | Expr e ->
         // _ 表示丢弃e的值,返回 变更后的环境store1

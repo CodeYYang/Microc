@@ -44,6 +44,8 @@ type token =
   | FLOAT
   | SWITCH
   | CASE
+  | DOWHILE
+  | DO
   | CSTFLOAT of (float32)
   | CSTCHAR of (char)
   | CSTSTRING of (string)
@@ -94,6 +96,8 @@ type tokenId =
     | TOKEN_FLOAT
     | TOKEN_SWITCH
     | TOKEN_CASE
+    | TOKEN_DOWHILE
+    | TOKEN_DO
     | TOKEN_CSTFLOAT
     | TOKEN_CSTCHAR
     | TOKEN_CSTSTRING
