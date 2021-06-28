@@ -103,6 +103,17 @@ let rec addCST i C =
     | (0, IFNZRO lab :: C1) -> C1
     | (_, IFNZRO lab :: C1) -> addGOTO lab C1
     | _                     -> CSTI i :: C
+
+let rec addCSTC i C =
+    match (i, C) with
+    | _                     -> (CSTC ((int32)(System.BitConverter.ToInt16(System.BitConverter.GetBytes(char(i)), 0)))) :: C
+
+let rec addCSTS (s:string) C =
+    match (s, C) with
+    | _                     -> let mutable list =[];
+                               for i = 0 to s.Length do
+                                   list <- (int (s.Chars(i)))::list
+                               (CSTS list) :: C
             
 (* ------------------------------------------------------------------- *)
 
@@ -119,7 +130,8 @@ let rec lookup env x =
 
 type Var = 
     | Glovar of int                   (* absolute address in stack           *)
-    | Locvar of int                   (* address relative to bottom of frame *)
+    | Locvar of int                   (* address relative to b ottom of frame *)
+
 
 (* The variable environment keeps track of global and local variables, and 
    keeps track of next available offset for local variables *)
@@ -142,10 +154,15 @@ let allocate (kind : int -> Var) (typ, x) (varEnv : VarEnv) : VarEnv * instr lis
       let newEnv = ((x, (kind (fdepth+i), typ)) :: env, fdepth+i+1)
       let code = [INCSP i; GETSP; CSTI (i-1); SUB]
       (newEnv, code)
+    | TypS         ->
+        let newEnv = ((x, (kind (fdepth+128), typ)) :: env, fdepth+128+1)
+        let code = [INCSP 128; GETSP; CSTI (128-1); SUB]
+        (newEnv, code)
     | _ -> 
       let newEnv = ((x, (kind (fdepth), typ)) :: env, fdepth+1)
       let code = [INCSP 1]
       (newEnv, code)
+    
 
 (* Bind declared parameter in env: *)
 
@@ -224,6 +241,11 @@ and bStmtordec stmtOrDec varEnv : bstmtordec * VarEnv =
     | Dec (typ, x) ->
       let (varEnv1, code) = allocate Locvar (typ, x) varEnv 
       (BDec code, varEnv1)
+    | DecAndAssign (typ,x,e) -> 
+      let (varEnv1, code) = allocate Locvar (typ,x) varEnv
+      (BDec (cAccess (AccVar(x)) varEnv1 []  // cAccess 增加 x变量 对应的 的指令
+                (cExpr e varEnv1 [] (STI :: (addINCSP -1 code))) // 取出这个变量 给他赋值 
+            ), varEnv1)
 
 (* Compiling micro-C expressions: 
 
@@ -245,7 +267,15 @@ and cExpr (e : expr) (varEnv : VarEnv) (funEnv : FunEnv) (C : instr list) : inst
     | Access acc     -> cAccess acc varEnv funEnv (LDI :: C)
     | Assign(acc, e) -> cAccess acc varEnv funEnv (cExpr e varEnv funEnv (STI :: C))
     | CstI i         -> addCST i C
+    | ConstChar i    -> addCST (int i) C   //字符
+    | ConstString s     -> addCST (int s) C     //字符串
     | Addr acc       -> cAccess acc varEnv funEnv C
+    | Print(ope,e1)  -> // print("%d",i)
+      cExpr e1 varEnv funEnv
+           (match ope with
+            | "%d"  -> PRINTI :: C
+            | "%c"  -> PRINTC :: C
+            | _        -> failwith "unknown primitive 1")
     | Prim1(ope, e1) ->
       cExpr e1 varEnv funEnv
           (match ope with
@@ -268,7 +298,7 @@ and cExpr (e : expr) (varEnv : VarEnv) (funEnv : FunEnv) (C : instr list) : inst
             | ">="  -> LT   :: addNOT C
             | ">"   -> SWAP :: LT :: C
             | "<="  -> SWAP :: LT :: addNOT C
-            | _     -> failwith "unknown primitive 2"))
+            | _     -> failwith "unknown primitive 2"))       
     | Andalso(e1, e2) ->
       match C with
       | IFZERO lab :: _ ->
