@@ -464,7 +464,7 @@ and eval e locEnv gloEnv store : memoryData * store =
             | _ -> failwith ("unknown primitive " + ope)
 
         (res, store1)
-    | Print (ope , e1) ->
+    | Printf (ope , e1) ->
         let (i1,store1) = eval e1 locEnv gloEnv store
 
         let res = 
@@ -475,7 +475,7 @@ and eval e locEnv gloEnv store : memoryData * store =
             | "%f"   -> (printf "%f " i1.float;i1)
             | "%x"   -> (printf "%x"  i1.int;i1)
             | "%o"   -> (printf "%o"  i1.int;i1) 
-            | _      ->   (printf "%s " i1.string;i1) 
+            | _      -> (printf "%s " i1.string;i1) 
 
         (res, store1)
 
@@ -488,28 +488,47 @@ and eval e locEnv gloEnv store : memoryData * store =
             match ope with
             | "*" ->
                 match (i1) with
-                | INT i -> INT(i1.int * i2.int)
-                | FLOAT i -> FLOAT(i1.float * i2.float)
-                | _ -> failwith ("type error: cant calu")
+                | INT i -> 
+                    if(i2.typeName = i1.typeName) then INT(i1.int * i2.int)
+                    else FLOAT(i1.float * i2.float)
+                | FLOAT i -> 
+                    if(i2.typeName = i1.typeName) then FLOAT(i1.float * i2.float)
+                    else FLOAT(i1.float * i2.float)
+                | _ -> failwith ("cant TIMES")
             | "+" ->
-                match (i1, i2) with
-                | (INT i1, INT i2) -> INT(i1 + i2)
-                | (FLOAT i1, _) -> FLOAT(i1 + i2.float)
-                | (_, FLOAT i2) -> FLOAT(i1.float + i2)
-                | (STRING i1, STRING i2) -> STRING(i1 + i2)
-                | _ -> failwith ("type error: cant calu")
+                match i1 with
+                | INT i -> 
+                    if(i2.typeName = i1.typeName) then INT(i1.int + i2.int)
+                    else FLOAT(i1.float + i2.float)
+                | FLOAT i -> 
+                    if(i2.typeName = i1.typeName) then FLOAT(i1.float + i2.float)
+                    else FLOAT(i1.float + i2.float)
+                | _ -> failwith ("cant PLUS")
             | "-" ->
-                match (i1, i2) with
-                | (INT i1, INT i2) -> INT(i1 - i2)
-                | (FLOAT i1, _) -> FLOAT(i1 - i2.float)
-                | (_, FLOAT i2) -> FLOAT(i1.float - i2)
-                | _ -> failwith ("type error: cant calu")
+                match i1 with
+                | INT i -> 
+                    if(i2.typeName = i1.typeName) then INT(i1.int - i2.int)
+                    else FLOAT(i1.float - i2.float)
+                | FLOAT i -> 
+                    if(i2.typeName = i1.typeName) then FLOAT(i1.float - i2.float)
+                    else FLOAT(i1.float - i2.float)
+                | _ -> failwith ("cant MINUS")
             | "/" ->
                 match i1 with
-                | INT i -> INT(i1.int / i2.int)
-                | FLOAT i -> FLOAT(i1.float / i2.float)
-                | _ -> failwith ("type error: cant calu")
-            | "%" -> INT(i1.int % i2.int)
+                | INT i -> 
+                    if(i2.typeName = i1.typeName) then INT(i1.int / i2.int)
+                    else FLOAT(i1.float / i2.float)
+                | FLOAT i -> 
+                    if(i2.typeName = i1.typeName) then FLOAT(i1.float / i2.float)
+                    else FLOAT(i1.float / i2.float)
+                | _ -> failwith ("cant DIV")
+            | "%" ->
+                match i2 with
+                | INT i -> 
+                    if(i2.typeName = i1.typeName) then INT(i1.int % i2.int)
+                    else failwith ("cant MOD")
+                | _ -> failwith ("cant MOD")
+
             | "==" ->
                 if i1 = i2 then
                     BOOL(true)
@@ -561,6 +580,120 @@ and eval e locEnv gloEnv store : memoryData * store =
             eval e2 locEnv gloEnv store1
         else
             res
+    | PlusAssign (acc, e) ->
+        let (loc, store1) = access acc locEnv gloEnv store
+        let (res, store2) = eval e locEnv gloEnv store1
+        let tmp = getSto store1 loc.pointer
+
+        let var =
+            match tmp with
+            | INT i -> 
+                if(tmp.typeName = res.typeName) then INT(tmp.int + res.int)
+                else FLOAT(tmp.float + res.float)
+            | FLOAT i -> FLOAT(tmp.float + res.float)
+            | _ -> failwith ("please input int or float")
+
+        (var, setSto store2 loc.pointer var)
+
+    | MinusAssign (acc, e) ->
+        let (loc, store1) = access acc locEnv gloEnv store
+        let (res, store2) = eval e locEnv gloEnv store1
+        let tmp = getSto store1 loc.pointer
+
+        let var =
+            match tmp with
+            | INT i -> 
+                if(tmp.typeName = res.typeName) then INT(tmp.int - res.int)
+                else FLOAT(tmp.float - res.float)
+            | FLOAT i -> FLOAT(tmp.float - res.float)
+            | _ -> failwith ("please input int or float")
+
+        (var, setSto store2 loc.pointer var)
+
+    | TimesAssign (acc, e) ->
+        let (loc, store1) = access acc locEnv gloEnv store
+        let (res, store2) = eval e locEnv gloEnv store1
+        let tmp = getSto store1 loc.pointer
+
+        let var =
+            match tmp with
+            | INT i -> 
+                if(tmp.typeName = res.typeName) then INT(tmp.int * res.int)
+                else FLOAT(tmp.float * res.float)
+            | FLOAT i -> FLOAT(tmp.float * res.float)
+            | _ -> failwith ("please input int or float")
+
+        (var, setSto store2 loc.pointer var)
+
+    | DivAssign (acc, e) ->
+        let (loc, store1) = access acc locEnv gloEnv store
+        let (res, store2) = eval e locEnv gloEnv store1
+        let tmp = getSto store1 loc.pointer
+
+        let var =
+            match tmp with
+            | INT i -> 
+                if(tmp.typeName = res.typeName) then INT(tmp.int / res.int)
+                else FLOAT(tmp.float / res.float)
+            | FLOAT i -> FLOAT(tmp.float / res.float)
+            | _ -> failwith ("please input int or float")
+
+        (var, setSto store2 loc.pointer var)
+
+    | ModAssign (acc, e) ->
+        let (loc, store1) = access acc locEnv gloEnv store
+        let (res, store2) = eval e locEnv gloEnv store1
+        let tmp = getSto store1 loc.pointer
+
+        let var =
+            match tmp with
+            | INT i -> 
+                if(tmp.typeName = res.typeName) then INT(tmp.int % res.int)
+                else failwith ("please input int or float")
+            | _ -> failwith ("please input int or float")
+
+        (var, setSto store2 loc.pointer var)
+
+    | PrePlus (ope, acc) ->
+        let (loc, store1) = access acc locEnv gloEnv store
+        let tmp = getSto store1 loc.pointer
+        let var =
+            match tmp with
+            | INT i -> INT(tmp.int + 1)
+            | FLOAT i -> FLOAT(tmp.float+1.0)
+            | _ -> failwith ("please input int or float")
+        (var, setSto store loc.pointer var)
+
+    | RearPlus (acc, ope) ->
+        let (loc, store1) = access acc locEnv gloEnv store
+        let tmp = getSto store1 loc.pointer
+        let var =
+            match tmp with
+            | INT i -> INT(tmp.int + 1)
+            | FLOAT i -> FLOAT(tmp.float+1.0)
+            | _ -> failwith ("please input int or float")
+        (var, setSto store loc.pointer var)
+
+    | PreMinus (ope, acc) ->
+        let (loc, store1) = access acc locEnv gloEnv store
+        let tmp = getSto store1 loc.pointer
+        let var =
+            match tmp with
+            | INT i -> INT(tmp.int - 1)
+            | FLOAT i -> FLOAT(tmp.float-1.0)
+            | _ -> failwith ("please input int or float")
+        (var, setSto store loc.pointer var)
+
+    | RearMinus (acc, ope) ->
+        let (loc, store1) = access acc locEnv gloEnv store
+        let tmp = getSto store1 loc.pointer
+        let var =
+            match tmp with
+            | INT i -> INT(tmp.int - 1)
+            | FLOAT i -> FLOAT(tmp.float-1.0)
+            | _ -> failwith ("please input int or float")
+        (var, setSto store loc.pointer var)
+
     | Orelse (e1, e2) ->
         let (i1, store1) as res = eval e1 locEnv gloEnv store
 

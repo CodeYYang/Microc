@@ -5,6 +5,6 @@ void main()
     a = 5.4;
     printf("%f",a);
     char b;
-    b = "B";
+    b = 'b';
     printf("%c",b);
 }

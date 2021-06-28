@@ -86,6 +86,13 @@ rule Token = parse          // 每个 规则rule 会生成为一个函数，函�
   | '<'             { LT }
   | ">="            { GE }
   | "<="            { LE }
+  | "+="            { PLUSASSIGN }
+  | "-="            { MINUSASSIGN }
+  | "*="            { TIMESASSIGN }
+  | "/="            { DIVASSIGN }
+  | "%="            { MODASSIGN }
+  | "++"            { DOUBLEPLUS }
+  | "--"            { DOUBLEMINUS }
   | "||"            { SEQOR }                     
   | "&&"            { SEQAND }                     
   | "&"             { AMP }                     

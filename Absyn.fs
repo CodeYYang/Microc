@@ -31,7 +31,17 @@ and expr =
     | Prim1 of string * expr // Unary primitive operator
     | Prim2 of string * expr * expr // Binary primitive operator
     | Print of string * expr     // Print operator
+    | Printf of string * expr     // Print operator
     | Prim3 of expr * expr * expr //三目运算符
+    | PlusAssign of access * expr // x += a
+    | MinusAssign of access * expr // x -= a
+    | TimesAssign of access * expr // x *=  a
+    | DivAssign of access * expr // x /= a
+    | PrePlus of string * access // ++x
+    | RearPlus of access * string // x++
+    | PreMinus of string * access // --x
+    | RearMinus of access * string // x--
+    | ModAssign of access * expr // x %= a
     | Andalso of expr * expr // Sequential and
     | Orelse of expr * expr // Sequential or
     | Call of string * expr list // Function call f(...)
