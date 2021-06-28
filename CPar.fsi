@@ -30,6 +30,11 @@ type token =
   | MOD
   | SELFPLUS
   | SELFMINUS
+  | SELFTIMES
+  | SELFDIV
+  | SELFMOD
+  | ADDONE
+  | MINUSONE
   | CHAR
   | ELSE
   | IF
@@ -83,6 +88,11 @@ type tokenId =
     | TOKEN_MOD
     | TOKEN_SELFPLUS
     | TOKEN_SELFMINUS
+    | TOKEN_SELFTIMES
+    | TOKEN_SELFDIV
+    | TOKEN_SELFMOD
+    | TOKEN_ADDONE
+    | TOKEN_MINUSONE
     | TOKEN_CHAR
     | TOKEN_ELSE
     | TOKEN_IF

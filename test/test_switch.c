@@ -1,6 +1,6 @@
 void main() {
     int x;
-    x=3;
+    x=1;
     switch( x ){
         case 1 : print 1;
         case 2 : print 2;

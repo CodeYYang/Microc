@@ -350,7 +350,29 @@ and eval e locEnv gloEnv store : int * store =
                                 | "%c"   -> (printf "%c " (char i1); i1)
                                 | "%d"   -> (printf "%d " i1; i1)  
                                 | "%s"   -> (printf "%s " (string i1); i1) 
+                                | _ -> failwith ("unknown primitive " + op)
                             (res, store1)
+
+
+    | SimpleOpt (ope,accVar,expr) ->
+        let  (loc, store1) = access accVar locEnv gloEnv store 
+        let  (accVar_val)  = getSto store1 loc
+        let  (expr_val, store2) = eval expr locEnv gloEnv store
+        let  res =
+            match ope with
+            | "I++" -> accVar_val + expr_val
+            | "++I" -> accVar_val + expr_val
+            | "I--" -> accVar_val - expr_val
+            | "--I" -> accVar_val - expr_val
+            | "+="  -> accVar_val + expr_val
+            | "-="  -> accVar_val - expr_val
+            | "*="  -> accVar_val * expr_val
+            | "/="  -> accVar_val / expr_val
+            | "%="  -> accVar_val % expr_val
+            | _ -> failwith ("unknown primitive " + ope)
+        (res, setSto store2 loc res)
+
+
     | Addr acc -> access acc locEnv gloEnv store
     | Prim1 (ope, e1) ->
         let (i1, store1) = eval e1 locEnv gloEnv store
@@ -363,14 +385,8 @@ and eval e locEnv gloEnv store : int * store =
                  i1)
             | "printc" ->
                 (printf "%c" (char i1)
-                 i1)
-            | "W++" -> i1+1
-            | "++W" -> i1+1
-            | "W--" -> i1-1
-            | "--W" -> i1-1            
+                 i1)         
             | _ -> failwith ("unknown primitive " + ope)
-
-
         (res, store1)
     | Prim2 (ope, e1, e2) ->
         let (i1, store1) = eval e1 locEnv gloEnv store

@@ -55,6 +55,11 @@ type token =
   | MOD
   | SELFPLUS
   | SELFMINUS
+  | SELFTIMES
+  | SELFDIV
+  | SELFMOD
+  | ADDONE
+  | MINUSONE
   | CHAR
   | ELSE
   | IF
@@ -109,6 +114,11 @@ type tokenId =
     | TOKEN_MOD
     | TOKEN_SELFPLUS
     | TOKEN_SELFMINUS
+    | TOKEN_SELFTIMES
+    | TOKEN_SELFDIV
+    | TOKEN_SELFMOD
+    | TOKEN_ADDONE
+    | TOKEN_MINUSONE
     | TOKEN_CHAR
     | TOKEN_ELSE
     | TOKEN_IF
@@ -196,29 +206,34 @@ let tagOfToken (t:token) =
   | MOD  -> 26 
   | SELFPLUS  -> 27 
   | SELFMINUS  -> 28 
-  | CHAR  -> 29 
-  | ELSE  -> 30 
-  | IF  -> 31 
-  | INT  -> 32 
-  | FLOAT  -> 33 
-  | NULL  -> 34 
-  | PRINT  -> 35 
-  | PRINTLN  -> 36 
-  | RETURN  -> 37 
-  | VOID  -> 38 
-  | WHILE  -> 39 
-  | STRING  -> 40 
-  | FOR  -> 41 
-  | DO  -> 42 
-  | DOWHILE  -> 43 
-  | SWITCH  -> 44 
-  | CASE  -> 45 
-  | CSTFLOAT _ -> 46 
-  | CSTCHAR _ -> 47 
-  | CSTSTRING _ -> 48 
-  | NAME _ -> 49 
-  | CSTINT _ -> 50 
-  | CSTBOOL _ -> 51 
+  | SELFTIMES  -> 29 
+  | SELFDIV  -> 30 
+  | SELFMOD  -> 31 
+  | ADDONE  -> 32 
+  | MINUSONE  -> 33 
+  | CHAR  -> 34 
+  | ELSE  -> 35 
+  | IF  -> 36 
+  | INT  -> 37 
+  | FLOAT  -> 38 
+  | NULL  -> 39 
+  | PRINT  -> 40 
+  | PRINTLN  -> 41 
+  | RETURN  -> 42 
+  | VOID  -> 43 
+  | WHILE  -> 44 
+  | STRING  -> 45 
+  | FOR  -> 46 
+  | DO  -> 47 
+  | DOWHILE  -> 48 
+  | SWITCH  -> 49 
+  | CASE  -> 50 
+  | CSTFLOAT _ -> 51 
+  | CSTCHAR _ -> 52 
+  | CSTSTRING _ -> 53 
+  | NAME _ -> 54 
+  | CSTINT _ -> 55 
+  | CSTBOOL _ -> 56 
 
 // This function maps integer indexes to symbolic token ids
 let tokenTagToTokenId (tokenIdx:int) = 
@@ -252,31 +267,36 @@ let tokenTagToTokenId (tokenIdx:int) =
   | 26 -> TOKEN_MOD 
   | 27 -> TOKEN_SELFPLUS 
   | 28 -> TOKEN_SELFMINUS 
-  | 29 -> TOKEN_CHAR 
-  | 30 -> TOKEN_ELSE 
-  | 31 -> TOKEN_IF 
-  | 32 -> TOKEN_INT 
-  | 33 -> TOKEN_FLOAT 
-  | 34 -> TOKEN_NULL 
-  | 35 -> TOKEN_PRINT 
-  | 36 -> TOKEN_PRINTLN 
-  | 37 -> TOKEN_RETURN 
-  | 38 -> TOKEN_VOID 
-  | 39 -> TOKEN_WHILE 
-  | 40 -> TOKEN_STRING 
-  | 41 -> TOKEN_FOR 
-  | 42 -> TOKEN_DO 
-  | 43 -> TOKEN_DOWHILE 
-  | 44 -> TOKEN_SWITCH 
-  | 45 -> TOKEN_CASE 
-  | 46 -> TOKEN_CSTFLOAT 
-  | 47 -> TOKEN_CSTCHAR 
-  | 48 -> TOKEN_CSTSTRING 
-  | 49 -> TOKEN_NAME 
-  | 50 -> TOKEN_CSTINT 
-  | 51 -> TOKEN_CSTBOOL 
-  | 54 -> TOKEN_end_of_input
-  | 52 -> TOKEN_error
+  | 29 -> TOKEN_SELFTIMES 
+  | 30 -> TOKEN_SELFDIV 
+  | 31 -> TOKEN_SELFMOD 
+  | 32 -> TOKEN_ADDONE 
+  | 33 -> TOKEN_MINUSONE 
+  | 34 -> TOKEN_CHAR 
+  | 35 -> TOKEN_ELSE 
+  | 36 -> TOKEN_IF 
+  | 37 -> TOKEN_INT 
+  | 38 -> TOKEN_FLOAT 
+  | 39 -> TOKEN_NULL 
+  | 40 -> TOKEN_PRINT 
+  | 41 -> TOKEN_PRINTLN 
+  | 42 -> TOKEN_RETURN 
+  | 43 -> TOKEN_VOID 
+  | 44 -> TOKEN_WHILE 
+  | 45 -> TOKEN_STRING 
+  | 46 -> TOKEN_FOR 
+  | 47 -> TOKEN_DO 
+  | 48 -> TOKEN_DOWHILE 
+  | 49 -> TOKEN_SWITCH 
+  | 50 -> TOKEN_CASE 
+  | 51 -> TOKEN_CSTFLOAT 
+  | 52 -> TOKEN_CSTCHAR 
+  | 53 -> TOKEN_CSTSTRING 
+  | 54 -> TOKEN_NAME 
+  | 55 -> TOKEN_CSTINT 
+  | 56 -> TOKEN_CSTBOOL 
+  | 59 -> TOKEN_end_of_input
+  | 57 -> TOKEN_error
   | _ -> failwith "tokenTagToTokenId: bad token"
 
 /// This function maps production indexes returned in syntax errors to strings representing the non terminal that would be produced by that production
@@ -350,37 +370,42 @@ let prodIdxToNonTerminal (prodIdx:int) =
     | 65 -> NONTERM_ExprNotAccess 
     | 66 -> NONTERM_ExprNotAccess 
     | 67 -> NONTERM_ExprNotAccess 
-    | 68 -> NONTERM_AtExprNotAccess 
-    | 69 -> NONTERM_AtExprNotAccess 
-    | 70 -> NONTERM_AtExprNotAccess 
-    | 71 -> NONTERM_AtExprNotAccess 
-    | 72 -> NONTERM_AtExprNotAccess 
+    | 68 -> NONTERM_ExprNotAccess 
+    | 69 -> NONTERM_ExprNotAccess 
+    | 70 -> NONTERM_ExprNotAccess 
+    | 71 -> NONTERM_ExprNotAccess 
+    | 72 -> NONTERM_ExprNotAccess 
     | 73 -> NONTERM_AtExprNotAccess 
-    | 74 -> NONTERM_Access 
-    | 75 -> NONTERM_Access 
-    | 76 -> NONTERM_Access 
-    | 77 -> NONTERM_Access 
-    | 78 -> NONTERM_Access 
-    | 79 -> NONTERM_Exprs 
-    | 80 -> NONTERM_Exprs 
-    | 81 -> NONTERM_Exprs1 
-    | 82 -> NONTERM_Exprs1 
-    | 83 -> NONTERM_Const 
-    | 84 -> NONTERM_Const 
-    | 85 -> NONTERM_Const 
-    | 86 -> NONTERM_Const 
-    | 87 -> NONTERM_ConstFloat 
-    | 88 -> NONTERM_ConstFloat 
-    | 89 -> NONTERM_ConstString 
-    | 90 -> NONTERM_ConstChar 
-    | 91 -> NONTERM_Type 
-    | 92 -> NONTERM_Type 
-    | 93 -> NONTERM_Type 
-    | 94 -> NONTERM_Type 
+    | 74 -> NONTERM_AtExprNotAccess 
+    | 75 -> NONTERM_AtExprNotAccess 
+    | 76 -> NONTERM_AtExprNotAccess 
+    | 77 -> NONTERM_AtExprNotAccess 
+    | 78 -> NONTERM_AtExprNotAccess 
+    | 79 -> NONTERM_Access 
+    | 80 -> NONTERM_Access 
+    | 81 -> NONTERM_Access 
+    | 82 -> NONTERM_Access 
+    | 83 -> NONTERM_Access 
+    | 84 -> NONTERM_Exprs 
+    | 85 -> NONTERM_Exprs 
+    | 86 -> NONTERM_Exprs1 
+    | 87 -> NONTERM_Exprs1 
+    | 88 -> NONTERM_Const 
+    | 89 -> NONTERM_Const 
+    | 90 -> NONTERM_Const 
+    | 91 -> NONTERM_Const 
+    | 92 -> NONTERM_ConstFloat 
+    | 93 -> NONTERM_ConstFloat 
+    | 94 -> NONTERM_ConstString 
+    | 95 -> NONTERM_ConstChar 
+    | 96 -> NONTERM_Type 
+    | 97 -> NONTERM_Type 
+    | 98 -> NONTERM_Type 
+    | 99 -> NONTERM_Type 
     | _ -> failwith "prodIdxToNonTerminal: bad production index"
 
-let _fsyacc_endOfInputTag = 54 
-let _fsyacc_tagOfErrorTerminal = 52
+let _fsyacc_endOfInputTag = 59 
+let _fsyacc_tagOfErrorTerminal = 57
 
 // This function gets the name of a token as a string
 let token_to_string (t:token) = 
@@ -414,6 +439,11 @@ let token_to_string (t:token) =
   | MOD  -> "MOD" 
   | SELFPLUS  -> "SELFPLUS" 
   | SELFMINUS  -> "SELFMINUS" 
+  | SELFTIMES  -> "SELFTIMES" 
+  | SELFDIV  -> "SELFDIV" 
+  | SELFMOD  -> "SELFMOD" 
+  | ADDONE  -> "ADDONE" 
+  | MINUSONE  -> "MINUSONE" 
   | CHAR  -> "CHAR" 
   | ELSE  -> "ELSE" 
   | IF  -> "IF" 
@@ -470,6 +500,11 @@ let _fsyacc_dataOfToken (t:token) =
   | MOD  -> (null : System.Object) 
   | SELFPLUS  -> (null : System.Object) 
   | SELFMINUS  -> (null : System.Object) 
+  | SELFTIMES  -> (null : System.Object) 
+  | SELFDIV  -> (null : System.Object) 
+  | SELFMOD  -> (null : System.Object) 
+  | ADDONE  -> (null : System.Object) 
+  | MINUSONE  -> (null : System.Object) 
   | CHAR  -> (null : System.Object) 
   | ELSE  -> (null : System.Object) 
   | IF  -> (null : System.Object) 
@@ -493,18 +528,18 @@ let _fsyacc_dataOfToken (t:token) =
   | NAME _fsyacc_x -> Microsoft.FSharp.Core.Operators.box _fsyacc_x 
   | CSTINT _fsyacc_x -> Microsoft.FSharp.Core.Operators.box _fsyacc_x 
   | CSTBOOL _fsyacc_x -> Microsoft.FSharp.Core.Operators.box _fsyacc_x 
-let _fsyacc_gotos = [| 0us; 65535us; 1us; 65535us; 0us; 1us; 2us; 65535us; 0us; 2us; 4us; 5us; 2us; 65535us; 0us; 4us; 4us; 4us; 9us; 65535us; 0us; 6us; 4us; 6us; 31us; 40us; 35us; 40us; 41us; 40us; 43us; 48us; 46us; 48us; 49us; 48us; 52us; 48us; 6us; 65535us; 0us; 9us; 4us; 9us; 43us; 51us; 46us; 51us; 49us; 51us; 52us; 51us; 5us; 65535us; 11us; 15us; 12us; 14us; 13us; 14us; 20us; 21us; 22us; 23us; 2us; 65535us; 0us; 8us; 4us; 8us; 2us; 65535us; 31us; 32us; 35us; 36us; 3us; 65535us; 31us; 39us; 35us; 39us; 41us; 42us; 15us; 65535us; 33us; 34us; 37us; 38us; 43us; 72us; 46us; 72us; 49us; 72us; 52us; 72us; 64us; 72us; 79us; 72us; 80us; 72us; 82us; 72us; 83us; 72us; 91us; 72us; 92us; 72us; 94us; 72us; 110us; 72us; 4us; 65535us; 43us; 44us; 46us; 47us; 49us; 50us; 52us; 53us; 5us; 65535us; 43us; 46us; 46us; 46us; 49us; 46us; 52us; 46us; 80us; 114us; 13us; 65535us; 43us; 54us; 46us; 54us; 49us; 54us; 52us; 54us; 64us; 65us; 79us; 81us; 80us; 55us; 82us; 84us; 83us; 84us; 91us; 93us; 92us; 93us; 94us; 95us; 110us; 111us; 2us; 65535us; 105us; 106us; 111us; 112us; 7us; 65535us; 43us; 56us; 46us; 56us; 49us; 56us; 52us; 56us; 80us; 56us; 83us; 113us; 92us; 115us; 51us; 65535us; 16us; 17us; 43us; 66us; 46us; 66us; 49us; 66us; 52us; 66us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 66us; 68us; 70us; 75us; 78us; 76us; 77us; 79us; 66us; 80us; 66us; 82us; 66us; 83us; 66us; 87us; 90us; 88us; 89us; 91us; 66us; 92us; 66us; 94us; 66us; 97us; 98us; 102us; 103us; 110us; 66us; 121us; 122us; 124us; 156us; 127us; 128us; 129us; 130us; 131us; 152us; 133us; 134us; 157us; 137us; 158us; 138us; 161us; 139us; 162us; 140us; 163us; 141us; 164us; 142us; 165us; 143us; 166us; 144us; 167us; 145us; 168us; 146us; 169us; 147us; 170us; 148us; 171us; 149us; 172us; 150us; 173us; 151us; 174us; 153us; 175us; 154us; 177us; 152us; 178us; 152us; 192us; 155us; 195us; 156us; 51us; 65535us; 16us; 118us; 43us; 118us; 46us; 118us; 49us; 118us; 52us; 118us; 58us; 118us; 60us; 118us; 62us; 118us; 64us; 118us; 68us; 118us; 75us; 118us; 76us; 118us; 79us; 118us; 80us; 118us; 82us; 118us; 83us; 118us; 87us; 118us; 88us; 118us; 91us; 118us; 92us; 118us; 94us; 118us; 97us; 118us; 102us; 118us; 110us; 118us; 121us; 118us; 124us; 118us; 127us; 118us; 129us; 118us; 131us; 119us; 133us; 118us; 157us; 118us; 158us; 118us; 161us; 118us; 162us; 118us; 163us; 118us; 164us; 118us; 165us; 118us; 166us; 118us; 167us; 118us; 168us; 118us; 169us; 118us; 170us; 118us; 171us; 118us; 172us; 118us; 173us; 118us; 174us; 118us; 175us; 118us; 177us; 119us; 178us; 119us; 192us; 118us; 195us; 118us; 53us; 65535us; 16us; 120us; 43us; 120us; 46us; 120us; 49us; 120us; 52us; 120us; 58us; 120us; 60us; 120us; 62us; 120us; 64us; 120us; 68us; 120us; 75us; 120us; 76us; 120us; 79us; 120us; 80us; 120us; 82us; 120us; 83us; 120us; 87us; 120us; 88us; 120us; 91us; 120us; 92us; 120us; 94us; 120us; 97us; 120us; 102us; 120us; 108us; 109us; 110us; 120us; 121us; 120us; 124us; 120us; 127us; 120us; 129us; 120us; 131us; 120us; 133us; 120us; 157us; 120us; 158us; 120us; 161us; 120us; 162us; 120us; 163us; 120us; 164us; 120us; 165us; 120us; 166us; 120us; 167us; 120us; 168us; 120us; 169us; 120us; 170us; 120us; 171us; 120us; 172us; 120us; 173us; 120us; 174us; 120us; 175us; 120us; 177us; 120us; 178us; 120us; 189us; 191us; 192us; 120us; 195us; 120us; 54us; 65535us; 16us; 117us; 43us; 117us; 46us; 117us; 49us; 117us; 52us; 117us; 58us; 117us; 60us; 117us; 62us; 117us; 64us; 117us; 68us; 117us; 75us; 117us; 76us; 117us; 79us; 117us; 80us; 117us; 82us; 117us; 83us; 117us; 87us; 117us; 88us; 117us; 91us; 117us; 92us; 117us; 94us; 117us; 97us; 117us; 102us; 117us; 110us; 117us; 121us; 117us; 124us; 117us; 127us; 117us; 129us; 117us; 131us; 116us; 133us; 117us; 157us; 117us; 158us; 117us; 161us; 117us; 162us; 117us; 163us; 117us; 164us; 117us; 165us; 117us; 166us; 117us; 167us; 117us; 168us; 117us; 169us; 117us; 170us; 117us; 171us; 117us; 172us; 117us; 173us; 117us; 174us; 117us; 175us; 117us; 177us; 117us; 178us; 116us; 183us; 184us; 186us; 187us; 189us; 190us; 192us; 117us; 195us; 117us; 1us; 65535us; 124us; 125us; 2us; 65535us; 124us; 194us; 195us; 196us; 53us; 65535us; 16us; 176us; 43us; 176us; 46us; 176us; 49us; 176us; 52us; 176us; 58us; 176us; 60us; 176us; 62us; 176us; 64us; 176us; 68us; 176us; 75us; 176us; 76us; 176us; 79us; 176us; 80us; 176us; 82us; 176us; 83us; 176us; 87us; 176us; 88us; 176us; 91us; 176us; 92us; 176us; 94us; 176us; 97us; 176us; 102us; 176us; 108us; 176us; 110us; 176us; 121us; 176us; 124us; 176us; 127us; 176us; 129us; 176us; 131us; 176us; 133us; 176us; 157us; 176us; 158us; 176us; 161us; 176us; 162us; 176us; 163us; 176us; 164us; 176us; 165us; 176us; 166us; 176us; 167us; 176us; 168us; 176us; 169us; 176us; 170us; 176us; 171us; 176us; 172us; 176us; 173us; 176us; 174us; 176us; 175us; 176us; 177us; 176us; 178us; 176us; 189us; 176us; 192us; 176us; 195us; 176us; 53us; 65535us; 16us; 182us; 43us; 182us; 46us; 182us; 49us; 182us; 52us; 182us; 58us; 182us; 60us; 182us; 62us; 182us; 64us; 182us; 68us; 182us; 75us; 182us; 76us; 182us; 79us; 182us; 80us; 182us; 82us; 182us; 83us; 182us; 87us; 182us; 88us; 182us; 91us; 182us; 92us; 182us; 94us; 182us; 97us; 182us; 102us; 182us; 108us; 182us; 110us; 182us; 121us; 182us; 124us; 182us; 127us; 182us; 129us; 182us; 131us; 182us; 133us; 182us; 157us; 182us; 158us; 182us; 161us; 182us; 162us; 182us; 163us; 182us; 164us; 182us; 165us; 182us; 166us; 182us; 167us; 182us; 168us; 182us; 169us; 182us; 170us; 182us; 171us; 182us; 172us; 182us; 173us; 182us; 174us; 182us; 175us; 182us; 177us; 182us; 178us; 182us; 189us; 182us; 192us; 182us; 195us; 182us; 53us; 65535us; 16us; 181us; 43us; 181us; 46us; 181us; 49us; 181us; 52us; 181us; 58us; 181us; 60us; 181us; 62us; 181us; 64us; 181us; 68us; 181us; 75us; 181us; 76us; 181us; 79us; 181us; 80us; 181us; 82us; 181us; 83us; 181us; 87us; 181us; 88us; 181us; 91us; 181us; 92us; 181us; 94us; 181us; 97us; 181us; 102us; 181us; 108us; 181us; 110us; 181us; 121us; 181us; 124us; 181us; 127us; 181us; 129us; 181us; 131us; 181us; 133us; 181us; 157us; 181us; 158us; 181us; 161us; 181us; 162us; 181us; 163us; 181us; 164us; 181us; 165us; 181us; 166us; 181us; 167us; 181us; 168us; 181us; 169us; 181us; 170us; 181us; 171us; 181us; 172us; 181us; 173us; 181us; 174us; 181us; 175us; 181us; 177us; 181us; 178us; 181us; 189us; 181us; 192us; 181us; 195us; 181us; 53us; 65535us; 16us; 180us; 43us; 180us; 46us; 180us; 49us; 180us; 52us; 180us; 58us; 180us; 60us; 180us; 62us; 180us; 64us; 180us; 68us; 180us; 75us; 180us; 76us; 180us; 79us; 180us; 80us; 180us; 82us; 180us; 83us; 180us; 87us; 180us; 88us; 180us; 91us; 180us; 92us; 180us; 94us; 180us; 97us; 180us; 102us; 180us; 108us; 180us; 110us; 180us; 121us; 180us; 124us; 180us; 127us; 180us; 129us; 180us; 131us; 180us; 133us; 180us; 157us; 180us; 158us; 180us; 161us; 180us; 162us; 180us; 163us; 180us; 164us; 180us; 165us; 180us; 166us; 180us; 167us; 180us; 168us; 180us; 169us; 180us; 170us; 180us; 171us; 180us; 172us; 180us; 173us; 180us; 174us; 180us; 175us; 180us; 177us; 180us; 178us; 180us; 189us; 180us; 192us; 180us; 195us; 180us; 9us; 65535us; 0us; 13us; 4us; 13us; 31us; 11us; 35us; 11us; 41us; 11us; 43us; 12us; 46us; 12us; 49us; 12us; 52us; 12us; |]
-let _fsyacc_sparseGotoTableRowOffsets = [|0us; 1us; 3us; 6us; 9us; 19us; 26us; 32us; 35us; 38us; 42us; 58us; 63us; 69us; 83us; 86us; 94us; 146us; 198us; 252us; 307us; 309us; 312us; 366us; 420us; 474us; 528us; |]
-let _fsyacc_stateToProdIdxsTableElements = [| 1us; 0us; 1us; 0us; 1us; 1us; 1us; 1us; 1us; 3us; 1us; 3us; 1us; 4us; 1us; 4us; 1us; 5us; 1us; 6us; 1us; 6us; 1us; 7us; 2us; 7us; 8us; 3us; 7us; 8us; 15us; 4us; 7us; 8us; 12us; 13us; 3us; 7us; 12us; 13us; 1us; 8us; 17us; 8us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 1us; 9us; 2us; 9us; 15us; 1us; 10us; 3us; 10us; 12us; 13us; 1us; 11us; 3us; 11us; 12us; 13us; 1us; 11us; 2us; 12us; 13us; 1us; 12us; 1us; 13us; 1us; 13us; 1us; 14us; 1us; 14us; 1us; 14us; 1us; 14us; 1us; 14us; 1us; 14us; 1us; 15us; 1us; 15us; 1us; 15us; 1us; 15us; 1us; 17us; 2us; 18us; 19us; 1us; 19us; 1us; 19us; 1us; 20us; 1us; 20us; 1us; 20us; 1us; 22us; 1us; 22us; 1us; 23us; 1us; 23us; 1us; 23us; 1us; 24us; 1us; 24us; 1us; 24us; 1us; 25us; 3us; 25us; 32us; 38us; 1us; 26us; 1us; 27us; 1us; 27us; 17us; 27us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 1us; 27us; 17us; 27us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 1us; 27us; 17us; 27us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 1us; 27us; 1us; 27us; 17us; 28us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 1us; 28us; 2us; 29us; 30us; 1us; 29us; 17us; 30us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 1us; 30us; 1us; 31us; 1us; 32us; 3us; 32us; 38us; 39us; 1us; 32us; 3us; 32us; 38us; 39us; 19us; 32us; 38us; 39us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 17us; 32us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 1us; 32us; 3us; 32us; 38us; 39us; 1us; 32us; 1us; 32us; 2us; 32us; 38us; 1us; 32us; 1us; 33us; 2us; 33us; 40us; 1us; 33us; 2us; 33us; 40us; 18us; 33us; 40us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 17us; 33us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 1us; 33us; 2us; 33us; 40us; 1us; 33us; 1us; 34us; 1us; 34us; 1us; 34us; 1us; 34us; 17us; 34us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 1us; 34us; 1us; 34us; 1us; 35us; 1us; 35us; 17us; 35us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 1us; 35us; 1us; 35us; 1us; 35us; 1us; 35us; 2us; 36us; 37us; 2us; 36us; 37us; 2us; 36us; 37us; 2us; 36us; 37us; 1us; 37us; 1us; 38us; 1us; 39us; 1us; 40us; 4us; 41us; 44us; 75us; 78us; 3us; 41us; 44us; 78us; 1us; 42us; 2us; 42us; 69us; 1us; 43us; 1us; 44us; 17us; 44us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 2us; 45us; 74us; 1us; 45us; 1us; 45us; 1us; 45us; 1us; 46us; 17us; 46us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 2us; 47us; 48us; 17us; 47us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 3us; 48us; 69us; 75us; 2us; 48us; 89us; 1us; 48us; 17us; 48us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 1us; 48us; 1us; 49us; 17us; 50us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 17us; 50us; 51us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 17us; 50us; 51us; 52us; 53us; 54us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 17us; 50us; 51us; 52us; 53us; 55us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 17us; 50us; 51us; 52us; 53us; 56us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 17us; 50us; 51us; 52us; 53us; 56us; 57us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 17us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 17us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 17us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 17us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 17us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 62us; 63us; 64us; 65us; 66us; 67us; 17us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 63us; 64us; 65us; 66us; 67us; 17us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 64us; 65us; 66us; 67us; 17us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 65us; 66us; 67us; 17us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 66us; 67us; 16us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 17us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 67us; 17us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 67us; 17us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 78us; 18us; 50us; 51us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 81us; 82us; 1us; 50us; 1us; 51us; 1us; 52us; 1us; 53us; 1us; 54us; 1us; 55us; 1us; 56us; 1us; 57us; 1us; 58us; 1us; 59us; 1us; 60us; 1us; 61us; 1us; 62us; 1us; 63us; 1us; 64us; 1us; 65us; 1us; 66us; 1us; 67us; 1us; 67us; 1us; 68us; 1us; 69us; 2us; 69us; 75us; 1us; 69us; 1us; 70us; 1us; 71us; 1us; 72us; 1us; 73us; 2us; 73us; 78us; 1us; 74us; 1us; 75us; 2us; 75us; 78us; 1us; 75us; 2us; 76us; 77us; 2us; 76us; 78us; 1us; 77us; 1us; 78us; 1us; 78us; 1us; 80us; 1us; 82us; 1us; 82us; 1us; 83us; 1us; 84us; 2us; 85us; 88us; 1us; 85us; 1us; 86us; 1us; 87us; 1us; 88us; 1us; 89us; 1us; 90us; 1us; 91us; 1us; 92us; 1us; 93us; 1us; 94us; |]
-let _fsyacc_stateToProdIdxsTableRowOffsets = [|0us; 2us; 4us; 6us; 8us; 10us; 12us; 14us; 16us; 18us; 20us; 22us; 24us; 27us; 31us; 36us; 40us; 42us; 60us; 62us; 65us; 67us; 71us; 73us; 77us; 79us; 82us; 84us; 86us; 88us; 90us; 92us; 94us; 96us; 98us; 100us; 102us; 104us; 106us; 108us; 110us; 113us; 115us; 117us; 119us; 121us; 123us; 125us; 127us; 129us; 131us; 133us; 135us; 137us; 139us; 141us; 145us; 147us; 149us; 151us; 169us; 171us; 189us; 191us; 209us; 211us; 213us; 231us; 233us; 236us; 238us; 256us; 258us; 260us; 262us; 266us; 268us; 272us; 292us; 310us; 312us; 316us; 318us; 320us; 323us; 325us; 327us; 330us; 332us; 335us; 354us; 372us; 374us; 377us; 379us; 381us; 383us; 385us; 387us; 405us; 407us; 409us; 411us; 413us; 431us; 433us; 435us; 437us; 439us; 442us; 445us; 448us; 451us; 453us; 455us; 457us; 459us; 464us; 468us; 470us; 473us; 475us; 477us; 495us; 498us; 500us; 502us; 504us; 506us; 524us; 527us; 545us; 549us; 552us; 554us; 572us; 574us; 576us; 594us; 612us; 630us; 648us; 666us; 684us; 702us; 720us; 738us; 756us; 774us; 792us; 810us; 828us; 846us; 863us; 881us; 899us; 917us; 936us; 938us; 940us; 942us; 944us; 946us; 948us; 950us; 952us; 954us; 956us; 958us; 960us; 962us; 964us; 966us; 968us; 970us; 972us; 974us; 976us; 978us; 981us; 983us; 985us; 987us; 989us; 991us; 994us; 996us; 998us; 1001us; 1003us; 1006us; 1009us; 1011us; 1013us; 1015us; 1017us; 1019us; 1021us; 1023us; 1025us; 1028us; 1030us; 1032us; 1034us; 1036us; 1038us; 1040us; 1042us; 1044us; 1046us; |]
-let _fsyacc_action_rows = 210
-let _fsyacc_actionTableElements = [|5us; 16386us; 29us; 207us; 32us; 206us; 33us; 209us; 38us; 29us; 40us; 208us; 0us; 49152us; 1us; 32768us; 0us; 3us; 0us; 16385us; 5us; 16386us; 29us; 207us; 32us; 206us; 33us; 209us; 38us; 29us; 40us; 208us; 0us; 16387us; 1us; 32768us; 7us; 7us; 0us; 16388us; 0us; 16389us; 1us; 32768us; 7us; 10us; 0us; 16390us; 3us; 32768us; 1us; 22us; 24us; 20us; 49us; 18us; 3us; 32768us; 1us; 22us; 24us; 20us; 49us; 18us; 3us; 32768us; 1us; 22us; 24us; 20us; 49us; 19us; 2us; 16391us; 5us; 25us; 9us; 16us; 1us; 16391us; 5us; 25us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 16392us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 0us; 16393us; 1us; 16393us; 1us; 35us; 3us; 32768us; 1us; 22us; 24us; 20us; 49us; 18us; 1us; 16394us; 5us; 25us; 3us; 32768us; 1us; 22us; 24us; 20us; 49us; 18us; 2us; 32768us; 2us; 24us; 5us; 25us; 0us; 16395us; 2us; 32768us; 6us; 26us; 50us; 27us; 0us; 16396us; 1us; 32768us; 6us; 28us; 0us; 16397us; 1us; 32768us; 49us; 30us; 1us; 32768us; 1us; 31us; 4us; 16400us; 29us; 207us; 32us; 206us; 33us; 209us; 40us; 208us; 1us; 32768us; 2us; 33us; 1us; 32768us; 3us; 43us; 0us; 16398us; 4us; 16400us; 29us; 207us; 32us; 206us; 33us; 209us; 40us; 208us; 1us; 32768us; 2us; 37us; 1us; 32768us; 3us; 43us; 0us; 16399us; 0us; 16401us; 1us; 16402us; 8us; 41us; 4us; 32768us; 29us; 207us; 32us; 206us; 33us; 209us; 40us; 208us; 0us; 16403us; 27us; 16405us; 1us; 178us; 3us; 43us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 29us; 207us; 31us; 74us; 32us; 206us; 33us; 209us; 34us; 201us; 35us; 129us; 36us; 136us; 37us; 68us; 39us; 86us; 40us; 208us; 41us; 57us; 42us; 94us; 44us; 101us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 1us; 32768us; 4us; 45us; 0us; 16404us; 27us; 16405us; 1us; 178us; 3us; 43us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 29us; 207us; 31us; 74us; 32us; 206us; 33us; 209us; 34us; 201us; 35us; 129us; 36us; 136us; 37us; 68us; 39us; 86us; 40us; 208us; 41us; 57us; 42us; 94us; 44us; 101us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 0us; 16406us; 1us; 32768us; 7us; 49us; 27us; 16405us; 1us; 178us; 3us; 43us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 29us; 207us; 31us; 74us; 32us; 206us; 33us; 209us; 34us; 201us; 35us; 129us; 36us; 136us; 37us; 68us; 39us; 86us; 40us; 208us; 41us; 57us; 42us; 94us; 44us; 101us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 0us; 16407us; 1us; 32768us; 7us; 52us; 27us; 16405us; 1us; 178us; 3us; 43us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 29us; 207us; 31us; 74us; 32us; 206us; 33us; 209us; 34us; 201us; 35us; 129us; 36us; 136us; 37us; 68us; 39us; 86us; 40us; 208us; 41us; 57us; 42us; 94us; 44us; 101us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 0us; 16408us; 0us; 16409us; 1us; 16409us; 30us; 83us; 0us; 16410us; 1us; 32768us; 1us; 58us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 17us; 32768us; 7us; 60us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 17us; 32768us; 7us; 62us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 17us; 32768us; 2us; 64us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 22us; 32768us; 1us; 178us; 3us; 43us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 31us; 73us; 34us; 201us; 35us; 129us; 36us; 136us; 37us; 68us; 39us; 85us; 42us; 94us; 44us; 101us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 0us; 16411us; 17us; 32768us; 7us; 67us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 0us; 16412us; 17us; 32768us; 1us; 178us; 7us; 69us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 0us; 16413us; 17us; 32768us; 7us; 71us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 0us; 16414us; 0us; 16415us; 1us; 32768us; 1us; 75us; 1us; 32768us; 1us; 76us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 17us; 32768us; 2us; 80us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 17us; 32768us; 2us; 79us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 22us; 32768us; 1us; 178us; 3us; 43us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 31us; 73us; 34us; 201us; 35us; 129us; 36us; 136us; 37us; 68us; 39us; 85us; 42us; 94us; 44us; 101us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 23us; 32768us; 1us; 178us; 3us; 43us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 31us; 74us; 34us; 201us; 35us; 129us; 36us; 136us; 37us; 68us; 39us; 86us; 41us; 57us; 42us; 94us; 44us; 101us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 1us; 32768us; 30us; 82us; 22us; 32768us; 1us; 178us; 3us; 43us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 31us; 73us; 34us; 201us; 35us; 129us; 36us; 136us; 37us; 68us; 39us; 85us; 42us; 94us; 44us; 101us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 22us; 32768us; 1us; 178us; 3us; 43us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 31us; 74us; 34us; 201us; 35us; 129us; 36us; 136us; 37us; 68us; 39us; 86us; 42us; 94us; 44us; 101us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 0us; 16416us; 1us; 32768us; 1us; 87us; 1us; 32768us; 1us; 88us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 17us; 32768us; 2us; 92us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 17us; 32768us; 2us; 91us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 22us; 32768us; 1us; 178us; 3us; 43us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 31us; 73us; 34us; 201us; 35us; 129us; 36us; 136us; 37us; 68us; 39us; 85us; 42us; 94us; 44us; 101us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 22us; 32768us; 1us; 178us; 3us; 43us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 31us; 74us; 34us; 201us; 35us; 129us; 36us; 136us; 37us; 68us; 39us; 86us; 42us; 94us; 44us; 101us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 0us; 16417us; 22us; 32768us; 1us; 178us; 3us; 43us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 31us; 73us; 34us; 201us; 35us; 129us; 36us; 136us; 37us; 68us; 39us; 85us; 42us; 94us; 44us; 101us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 1us; 32768us; 39us; 96us; 1us; 32768us; 1us; 97us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 17us; 32768us; 2us; 99us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 1us; 32768us; 7us; 100us; 0us; 16418us; 1us; 32768us; 1us; 102us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 17us; 32768us; 2us; 104us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 1us; 32768us; 3us; 105us; 1us; 32768us; 45us; 108us; 1us; 32768us; 4us; 107us; 0us; 16419us; 9us; 32768us; 1us; 177us; 10us; 183us; 23us; 199us; 34us; 201us; 46us; 202us; 47us; 205us; 48us; 204us; 50us; 197us; 51us; 198us; 1us; 32768us; 11us; 110us; 22us; 32768us; 1us; 178us; 3us; 43us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 31us; 73us; 34us; 201us; 35us; 129us; 36us; 136us; 37us; 68us; 39us; 85us; 42us; 94us; 44us; 101us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 1us; 16420us; 45us; 108us; 0us; 16421us; 0us; 16422us; 0us; 16423us; 0us; 16424us; 3us; 16425us; 2us; 188us; 5us; 192us; 9us; 121us; 2us; 16425us; 5us; 192us; 9us; 121us; 0us; 16426us; 1us; 16426us; 2us; 179us; 0us; 16427us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 16428us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 1us; 16458us; 1us; 124us; 16us; 16463us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 1us; 32768us; 2us; 126us; 0us; 16429us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 0us; 16430us; 16us; 32768us; 1us; 131us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 16431us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 132us; 49us; 123us; 50us; 197us; 51us; 198us; 1us; 16473us; 8us; 133us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 17us; 32768us; 2us; 135us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 0us; 16432us; 0us; 16433us; 6us; 16434us; 12us; 174us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 6us; 16435us; 12us; 174us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 3us; 16438us; 12us; 174us; 27us; 159us; 28us; 160us; 3us; 16439us; 12us; 174us; 27us; 159us; 28us; 160us; 3us; 16440us; 12us; 174us; 27us; 159us; 28us; 160us; 3us; 16441us; 12us; 174us; 27us; 159us; 28us; 160us; 3us; 16442us; 12us; 174us; 27us; 159us; 28us; 160us; 12us; 16443us; 12us; 174us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 12us; 16444us; 12us; 174us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 12us; 16445us; 12us; 174us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 12us; 16446us; 12us; 174us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 12us; 16447us; 12us; 174us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 12us; 16448us; 12us; 174us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 14us; 16449us; 12us; 174us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 15us; 16450us; 12us; 174us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 16us; 32768us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 17us; 32768us; 11us; 175us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 1us; 16451us; 12us; 174us; 17us; 32768us; 6us; 193us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 17us; 16465us; 8us; 195us; 12us; 174us; 14us; 173us; 15us; 172us; 16us; 166us; 17us; 167us; 18us; 168us; 19us; 169us; 20us; 170us; 21us; 171us; 22us; 157us; 23us; 158us; 24us; 163us; 25us; 164us; 26us; 165us; 27us; 159us; 28us; 160us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 0us; 16436us; 0us; 16437us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 0us; 16452us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 0us; 16453us; 0us; 16454us; 0us; 16455us; 0us; 16456us; 3us; 32768us; 1us; 186us; 24us; 189us; 49us; 185us; 1us; 16457us; 5us; 192us; 0us; 16458us; 3us; 32768us; 1us; 186us; 24us; 189us; 49us; 185us; 2us; 32768us; 2us; 188us; 5us; 192us; 0us; 16459us; 11us; 32768us; 1us; 178us; 10us; 183us; 23us; 199us; 24us; 189us; 34us; 201us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 185us; 50us; 197us; 51us; 198us; 1us; 16460us; 5us; 192us; 0us; 16461us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 0us; 16462us; 0us; 16464us; 16us; 32768us; 1us; 178us; 10us; 183us; 13us; 127us; 23us; 199us; 24us; 189us; 27us; 161us; 28us; 162us; 34us; 201us; 35us; 129us; 36us; 136us; 46us; 202us; 47us; 205us; 48us; 204us; 49us; 123us; 50us; 197us; 51us; 198us; 0us; 16466us; 0us; 16467us; 0us; 16468us; 2us; 32768us; 46us; 203us; 50us; 200us; 0us; 16469us; 0us; 16470us; 0us; 16471us; 0us; 16472us; 0us; 16473us; 0us; 16474us; 0us; 16475us; 0us; 16476us; 0us; 16477us; 0us; 16478us; |]
-let _fsyacc_actionTableRowOffsets = [|0us; 6us; 7us; 9us; 10us; 16us; 17us; 19us; 20us; 21us; 23us; 24us; 28us; 32us; 36us; 39us; 41us; 58us; 75us; 76us; 78us; 82us; 84us; 88us; 91us; 92us; 95us; 96us; 98us; 99us; 101us; 103us; 108us; 110us; 112us; 113us; 118us; 120us; 122us; 123us; 124us; 126us; 131us; 132us; 160us; 162us; 163us; 191us; 192us; 194us; 222us; 223us; 225us; 253us; 254us; 255us; 257us; 258us; 260us; 277us; 295us; 312us; 330us; 347us; 365us; 388us; 389us; 407us; 408us; 426us; 427us; 445us; 446us; 447us; 449us; 451us; 468us; 485us; 503us; 521us; 544us; 568us; 570us; 593us; 616us; 617us; 619us; 621us; 638us; 655us; 673us; 691us; 714us; 737us; 738us; 761us; 763us; 765us; 782us; 800us; 802us; 803us; 805us; 822us; 840us; 842us; 844us; 846us; 847us; 857us; 859us; 882us; 884us; 885us; 886us; 887us; 888us; 892us; 895us; 896us; 898us; 899us; 916us; 933us; 935us; 952us; 954us; 955us; 972us; 973us; 990us; 1007us; 1024us; 1026us; 1043us; 1061us; 1062us; 1063us; 1070us; 1077us; 1081us; 1085us; 1089us; 1093us; 1097us; 1110us; 1123us; 1136us; 1149us; 1162us; 1175us; 1190us; 1206us; 1223us; 1241us; 1243us; 1261us; 1279us; 1296us; 1313us; 1314us; 1315us; 1332us; 1349us; 1366us; 1383us; 1400us; 1417us; 1434us; 1451us; 1468us; 1485us; 1502us; 1519us; 1536us; 1553us; 1570us; 1571us; 1588us; 1605us; 1606us; 1607us; 1608us; 1609us; 1613us; 1615us; 1616us; 1620us; 1623us; 1624us; 1636us; 1638us; 1639us; 1656us; 1657us; 1658us; 1675us; 1676us; 1677us; 1678us; 1681us; 1682us; 1683us; 1684us; 1685us; 1686us; 1687us; 1688us; 1689us; 1690us; |]
-let _fsyacc_reductionSymbolCounts = [|1us; 2us; 0us; 2us; 2us; 1us; 2us; 2us; 4us; 1us; 2us; 3us; 3us; 4us; 6us; 6us; 0us; 1us; 1us; 3us; 3us; 0us; 2us; 3us; 3us; 1us; 1us; 9us; 2us; 2us; 3us; 1us; 7us; 5us; 7us; 7us; 4us; 5us; 7us; 5us; 5us; 1us; 1us; 1us; 3us; 4us; 2us; 2us; 6us; 1us; 3us; 3us; 2us; 2us; 2us; 2us; 3us; 3us; 3us; 3us; 3us; 3us; 3us; 3us; 3us; 3us; 3us; 5us; 1us; 3us; 1us; 1us; 1us; 2us; 1us; 3us; 2us; 2us; 4us; 0us; 1us; 1us; 3us; 1us; 1us; 2us; 1us; 1us; 2us; 1us; 1us; 1us; 1us; 1us; 1us; |]
-let _fsyacc_productionToNonTerminalTable = [|0us; 1us; 2us; 2us; 3us; 3us; 3us; 4us; 5us; 6us; 6us; 6us; 6us; 6us; 7us; 7us; 8us; 8us; 9us; 9us; 10us; 11us; 11us; 11us; 11us; 12us; 12us; 12us; 13us; 13us; 13us; 13us; 13us; 13us; 13us; 13us; 14us; 14us; 15us; 15us; 15us; 16us; 16us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 18us; 18us; 18us; 18us; 18us; 18us; 19us; 19us; 19us; 19us; 19us; 20us; 20us; 21us; 21us; 22us; 22us; 22us; 22us; 23us; 23us; 24us; 25us; 26us; 26us; 26us; 26us; |]
-let _fsyacc_immediateActions = [|65535us; 49152us; 65535us; 16385us; 65535us; 16387us; 65535us; 16388us; 16389us; 65535us; 16390us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 16393us; 65535us; 65535us; 65535us; 65535us; 65535us; 16395us; 65535us; 16396us; 65535us; 16397us; 65535us; 65535us; 65535us; 65535us; 65535us; 16398us; 65535us; 65535us; 65535us; 16399us; 16401us; 65535us; 65535us; 16403us; 65535us; 65535us; 16404us; 65535us; 16406us; 65535us; 65535us; 16407us; 65535us; 65535us; 16408us; 16409us; 65535us; 16410us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 16411us; 65535us; 16412us; 65535us; 16413us; 65535us; 16414us; 16415us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 16416us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 16417us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 16418us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 16419us; 65535us; 65535us; 65535us; 65535us; 16421us; 16422us; 16423us; 16424us; 65535us; 65535us; 16426us; 65535us; 16427us; 65535us; 65535us; 65535us; 65535us; 65535us; 16429us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 16432us; 16433us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 16436us; 16437us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 16452us; 65535us; 65535us; 16453us; 16454us; 16455us; 16456us; 65535us; 65535us; 16458us; 65535us; 65535us; 16459us; 65535us; 65535us; 16461us; 65535us; 16462us; 16464us; 65535us; 16466us; 16467us; 16468us; 65535us; 16469us; 16470us; 16471us; 16472us; 16473us; 16474us; 16475us; 16476us; 16477us; 16478us; |]
+let _fsyacc_gotos = [| 0us; 65535us; 1us; 65535us; 0us; 1us; 2us; 65535us; 0us; 2us; 4us; 5us; 2us; 65535us; 0us; 4us; 4us; 4us; 9us; 65535us; 0us; 6us; 4us; 6us; 31us; 40us; 35us; 40us; 41us; 40us; 43us; 48us; 46us; 48us; 49us; 48us; 52us; 48us; 6us; 65535us; 0us; 9us; 4us; 9us; 43us; 51us; 46us; 51us; 49us; 51us; 52us; 51us; 5us; 65535us; 11us; 15us; 12us; 14us; 13us; 14us; 20us; 21us; 22us; 23us; 2us; 65535us; 0us; 8us; 4us; 8us; 2us; 65535us; 31us; 32us; 35us; 36us; 3us; 65535us; 31us; 39us; 35us; 39us; 41us; 42us; 15us; 65535us; 33us; 34us; 37us; 38us; 43us; 72us; 46us; 72us; 49us; 72us; 52us; 72us; 64us; 72us; 79us; 72us; 80us; 72us; 82us; 72us; 83us; 72us; 91us; 72us; 92us; 72us; 94us; 72us; 110us; 72us; 4us; 65535us; 43us; 44us; 46us; 47us; 49us; 50us; 52us; 53us; 5us; 65535us; 43us; 46us; 46us; 46us; 49us; 46us; 52us; 46us; 80us; 114us; 13us; 65535us; 43us; 54us; 46us; 54us; 49us; 54us; 52us; 54us; 64us; 65us; 79us; 81us; 80us; 55us; 82us; 84us; 83us; 84us; 91us; 93us; 92us; 93us; 94us; 95us; 110us; 111us; 2us; 65535us; 105us; 106us; 111us; 112us; 7us; 65535us; 43us; 56us; 46us; 56us; 49us; 56us; 52us; 56us; 80us; 56us; 83us; 113us; 92us; 115us; 54us; 65535us; 16us; 17us; 43us; 66us; 46us; 66us; 49us; 66us; 52us; 66us; 58us; 59us; 60us; 61us; 62us; 63us; 64us; 66us; 68us; 70us; 75us; 78us; 76us; 77us; 79us; 66us; 80us; 66us; 82us; 66us; 83us; 66us; 87us; 90us; 88us; 89us; 91us; 66us; 92us; 66us; 94us; 66us; 97us; 98us; 102us; 103us; 110us; 66us; 121us; 122us; 124us; 159us; 127us; 128us; 129us; 130us; 131us; 155us; 133us; 134us; 160us; 137us; 161us; 138us; 168us; 139us; 169us; 140us; 170us; 141us; 171us; 142us; 172us; 143us; 173us; 144us; 174us; 145us; 175us; 146us; 176us; 147us; 177us; 148us; 178us; 149us; 179us; 150us; 180us; 151us; 181us; 152us; 182us; 153us; 183us; 154us; 184us; 156us; 185us; 157us; 187us; 155us; 188us; 155us; 202us; 158us; 205us; 159us; 54us; 65535us; 16us; 118us; 43us; 118us; 46us; 118us; 49us; 118us; 52us; 118us; 58us; 118us; 60us; 118us; 62us; 118us; 64us; 118us; 68us; 118us; 75us; 118us; 76us; 118us; 79us; 118us; 80us; 118us; 82us; 118us; 83us; 118us; 87us; 118us; 88us; 118us; 91us; 118us; 92us; 118us; 94us; 118us; 97us; 118us; 102us; 118us; 110us; 118us; 121us; 118us; 124us; 118us; 127us; 118us; 129us; 118us; 131us; 119us; 133us; 118us; 160us; 118us; 161us; 118us; 168us; 118us; 169us; 118us; 170us; 118us; 171us; 118us; 172us; 118us; 173us; 118us; 174us; 118us; 175us; 118us; 176us; 118us; 177us; 118us; 178us; 118us; 179us; 118us; 180us; 118us; 181us; 118us; 182us; 118us; 183us; 118us; 184us; 118us; 185us; 118us; 187us; 119us; 188us; 119us; 202us; 118us; 205us; 118us; 56us; 65535us; 16us; 120us; 43us; 120us; 46us; 120us; 49us; 120us; 52us; 120us; 58us; 120us; 60us; 120us; 62us; 120us; 64us; 120us; 68us; 120us; 75us; 120us; 76us; 120us; 79us; 120us; 80us; 120us; 82us; 120us; 83us; 120us; 87us; 120us; 88us; 120us; 91us; 120us; 92us; 120us; 94us; 120us; 97us; 120us; 102us; 120us; 108us; 109us; 110us; 120us; 121us; 120us; 124us; 120us; 127us; 120us; 129us; 120us; 131us; 120us; 133us; 120us; 160us; 120us; 161us; 120us; 168us; 120us; 169us; 120us; 170us; 120us; 171us; 120us; 172us; 120us; 173us; 120us; 174us; 120us; 175us; 120us; 176us; 120us; 177us; 120us; 178us; 120us; 179us; 120us; 180us; 120us; 181us; 120us; 182us; 120us; 183us; 120us; 184us; 120us; 185us; 120us; 187us; 120us; 188us; 120us; 199us; 201us; 202us; 120us; 205us; 120us; 59us; 65535us; 16us; 117us; 43us; 117us; 46us; 117us; 49us; 117us; 52us; 117us; 58us; 117us; 60us; 117us; 62us; 117us; 64us; 117us; 68us; 117us; 75us; 117us; 76us; 117us; 79us; 117us; 80us; 117us; 82us; 117us; 83us; 117us; 87us; 117us; 88us; 117us; 91us; 117us; 92us; 117us; 94us; 117us; 97us; 117us; 102us; 117us; 110us; 117us; 121us; 117us; 124us; 117us; 127us; 117us; 129us; 117us; 131us; 116us; 133us; 117us; 160us; 117us; 161us; 117us; 164us; 165us; 166us; 167us; 168us; 117us; 169us; 117us; 170us; 117us; 171us; 117us; 172us; 117us; 173us; 117us; 174us; 117us; 175us; 117us; 176us; 117us; 177us; 117us; 178us; 117us; 179us; 117us; 180us; 117us; 181us; 117us; 182us; 117us; 183us; 117us; 184us; 117us; 185us; 117us; 187us; 117us; 188us; 116us; 193us; 194us; 196us; 197us; 199us; 200us; 202us; 117us; 205us; 117us; 1us; 65535us; 124us; 125us; 2us; 65535us; 124us; 204us; 205us; 206us; 56us; 65535us; 16us; 186us; 43us; 186us; 46us; 186us; 49us; 186us; 52us; 186us; 58us; 186us; 60us; 186us; 62us; 186us; 64us; 186us; 68us; 186us; 75us; 186us; 76us; 186us; 79us; 186us; 80us; 186us; 82us; 186us; 83us; 186us; 87us; 186us; 88us; 186us; 91us; 186us; 92us; 186us; 94us; 186us; 97us; 186us; 102us; 186us; 108us; 186us; 110us; 186us; 121us; 186us; 124us; 186us; 127us; 186us; 129us; 186us; 131us; 186us; 133us; 186us; 160us; 186us; 161us; 186us; 168us; 186us; 169us; 186us; 170us; 186us; 171us; 186us; 172us; 186us; 173us; 186us; 174us; 186us; 175us; 186us; 176us; 186us; 177us; 186us; 178us; 186us; 179us; 186us; 180us; 186us; 181us; 186us; 182us; 186us; 183us; 186us; 184us; 186us; 185us; 186us; 187us; 186us; 188us; 186us; 199us; 186us; 202us; 186us; 205us; 186us; 56us; 65535us; 16us; 192us; 43us; 192us; 46us; 192us; 49us; 192us; 52us; 192us; 58us; 192us; 60us; 192us; 62us; 192us; 64us; 192us; 68us; 192us; 75us; 192us; 76us; 192us; 79us; 192us; 80us; 192us; 82us; 192us; 83us; 192us; 87us; 192us; 88us; 192us; 91us; 192us; 92us; 192us; 94us; 192us; 97us; 192us; 102us; 192us; 108us; 192us; 110us; 192us; 121us; 192us; 124us; 192us; 127us; 192us; 129us; 192us; 131us; 192us; 133us; 192us; 160us; 192us; 161us; 192us; 168us; 192us; 169us; 192us; 170us; 192us; 171us; 192us; 172us; 192us; 173us; 192us; 174us; 192us; 175us; 192us; 176us; 192us; 177us; 192us; 178us; 192us; 179us; 192us; 180us; 192us; 181us; 192us; 182us; 192us; 183us; 192us; 184us; 192us; 185us; 192us; 187us; 192us; 188us; 192us; 199us; 192us; 202us; 192us; 205us; 192us; 56us; 65535us; 16us; 191us; 43us; 191us; 46us; 191us; 49us; 191us; 52us; 191us; 58us; 191us; 60us; 191us; 62us; 191us; 64us; 191us; 68us; 191us; 75us; 191us; 76us; 191us; 79us; 191us; 80us; 191us; 82us; 191us; 83us; 191us; 87us; 191us; 88us; 191us; 91us; 191us; 92us; 191us; 94us; 191us; 97us; 191us; 102us; 191us; 108us; 191us; 110us; 191us; 121us; 191us; 124us; 191us; 127us; 191us; 129us; 191us; 131us; 191us; 133us; 191us; 160us; 191us; 161us; 191us; 168us; 191us; 169us; 191us; 170us; 191us; 171us; 191us; 172us; 191us; 173us; 191us; 174us; 191us; 175us; 191us; 176us; 191us; 177us; 191us; 178us; 191us; 179us; 191us; 180us; 191us; 181us; 191us; 182us; 191us; 183us; 191us; 184us; 191us; 185us; 191us; 187us; 191us; 188us; 191us; 199us; 191us; 202us; 191us; 205us; 191us; 56us; 65535us; 16us; 190us; 43us; 190us; 46us; 190us; 49us; 190us; 52us; 190us; 58us; 190us; 60us; 190us; 62us; 190us; 64us; 190us; 68us; 190us; 75us; 190us; 76us; 190us; 79us; 190us; 80us; 190us; 82us; 190us; 83us; 190us; 87us; 190us; 88us; 190us; 91us; 190us; 92us; 190us; 94us; 190us; 97us; 190us; 102us; 190us; 108us; 190us; 110us; 190us; 121us; 190us; 124us; 190us; 127us; 190us; 129us; 190us; 131us; 190us; 133us; 190us; 160us; 190us; 161us; 190us; 168us; 190us; 169us; 190us; 170us; 190us; 171us; 190us; 172us; 190us; 173us; 190us; 174us; 190us; 175us; 190us; 176us; 190us; 177us; 190us; 178us; 190us; 179us; 190us; 180us; 190us; 181us; 190us; 182us; 190us; 183us; 190us; 184us; 190us; 185us; 190us; 187us; 190us; 188us; 190us; 199us; 190us; 202us; 190us; 205us; 190us; 9us; 65535us; 0us; 13us; 4us; 13us; 31us; 11us; 35us; 11us; 41us; 11us; 43us; 12us; 46us; 12us; 49us; 12us; 52us; 12us; |]
+let _fsyacc_sparseGotoTableRowOffsets = [|0us; 1us; 3us; 6us; 9us; 19us; 26us; 32us; 35us; 38us; 42us; 58us; 63us; 69us; 83us; 86us; 94us; 149us; 204us; 261us; 321us; 323us; 326us; 383us; 440us; 497us; 554us; |]
+let _fsyacc_stateToProdIdxsTableElements = [| 1us; 0us; 1us; 0us; 1us; 1us; 1us; 1us; 1us; 3us; 1us; 3us; 1us; 4us; 1us; 4us; 1us; 5us; 1us; 6us; 1us; 6us; 1us; 7us; 2us; 7us; 8us; 3us; 7us; 8us; 15us; 4us; 7us; 8us; 12us; 13us; 3us; 7us; 12us; 13us; 1us; 8us; 15us; 8us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 1us; 9us; 2us; 9us; 15us; 1us; 10us; 3us; 10us; 12us; 13us; 1us; 11us; 3us; 11us; 12us; 13us; 1us; 11us; 2us; 12us; 13us; 1us; 12us; 1us; 13us; 1us; 13us; 1us; 14us; 1us; 14us; 1us; 14us; 1us; 14us; 1us; 14us; 1us; 14us; 1us; 15us; 1us; 15us; 1us; 15us; 1us; 15us; 1us; 17us; 2us; 18us; 19us; 1us; 19us; 1us; 19us; 1us; 20us; 1us; 20us; 1us; 20us; 1us; 22us; 1us; 22us; 1us; 23us; 1us; 23us; 1us; 23us; 1us; 24us; 1us; 24us; 1us; 24us; 1us; 25us; 3us; 25us; 32us; 38us; 1us; 26us; 1us; 27us; 1us; 27us; 15us; 27us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 1us; 27us; 15us; 27us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 1us; 27us; 15us; 27us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 1us; 27us; 1us; 27us; 15us; 28us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 1us; 28us; 2us; 29us; 30us; 1us; 29us; 15us; 30us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 1us; 30us; 1us; 31us; 1us; 32us; 3us; 32us; 38us; 39us; 1us; 32us; 3us; 32us; 38us; 39us; 17us; 32us; 38us; 39us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 15us; 32us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 1us; 32us; 3us; 32us; 38us; 39us; 1us; 32us; 1us; 32us; 2us; 32us; 38us; 1us; 32us; 1us; 33us; 2us; 33us; 40us; 1us; 33us; 2us; 33us; 40us; 16us; 33us; 40us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 15us; 33us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 1us; 33us; 2us; 33us; 40us; 1us; 33us; 1us; 34us; 1us; 34us; 1us; 34us; 1us; 34us; 15us; 34us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 1us; 34us; 1us; 34us; 1us; 35us; 1us; 35us; 15us; 35us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 1us; 35us; 1us; 35us; 1us; 35us; 1us; 35us; 2us; 36us; 37us; 2us; 36us; 37us; 2us; 36us; 37us; 2us; 36us; 37us; 1us; 37us; 1us; 38us; 1us; 39us; 1us; 40us; 11us; 41us; 44us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 80us; 83us; 10us; 41us; 44us; 52us; 53us; 56us; 57us; 58us; 59us; 60us; 83us; 1us; 42us; 2us; 42us; 74us; 1us; 43us; 1us; 44us; 15us; 44us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 2us; 45us; 79us; 1us; 45us; 1us; 45us; 1us; 45us; 1us; 46us; 15us; 46us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 2us; 47us; 48us; 15us; 47us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 3us; 48us; 74us; 80us; 2us; 48us; 94us; 1us; 48us; 15us; 48us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 1us; 48us; 1us; 49us; 15us; 50us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 15us; 50us; 51us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 15us; 50us; 51us; 56us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 15us; 50us; 51us; 57us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 15us; 50us; 51us; 58us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 15us; 50us; 51us; 59us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 15us; 50us; 51us; 60us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 15us; 50us; 51us; 61us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 15us; 50us; 51us; 61us; 62us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 15us; 50us; 51us; 61us; 62us; 63us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 15us; 50us; 51us; 61us; 62us; 63us; 64us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 15us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 15us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 15us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 67us; 68us; 69us; 70us; 71us; 72us; 15us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 68us; 69us; 70us; 71us; 72us; 15us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 69us; 70us; 71us; 72us; 15us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 70us; 71us; 72us; 15us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 71us; 72us; 14us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 15us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 72us; 15us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 72us; 15us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 83us; 16us; 50us; 51us; 61us; 62us; 63us; 64us; 65us; 66us; 67us; 68us; 69us; 70us; 71us; 72us; 86us; 87us; 1us; 50us; 1us; 51us; 1us; 52us; 1us; 53us; 1us; 54us; 2us; 54us; 83us; 1us; 55us; 2us; 55us; 83us; 1us; 56us; 1us; 57us; 1us; 58us; 1us; 59us; 1us; 60us; 1us; 61us; 1us; 62us; 1us; 63us; 1us; 64us; 1us; 65us; 1us; 66us; 1us; 67us; 1us; 68us; 1us; 69us; 1us; 70us; 1us; 71us; 1us; 72us; 1us; 72us; 1us; 73us; 1us; 74us; 2us; 74us; 80us; 1us; 74us; 1us; 75us; 1us; 76us; 1us; 77us; 1us; 78us; 2us; 78us; 83us; 1us; 79us; 1us; 80us; 2us; 80us; 83us; 1us; 80us; 2us; 81us; 82us; 2us; 81us; 83us; 1us; 82us; 1us; 83us; 1us; 83us; 1us; 85us; 1us; 87us; 1us; 87us; 1us; 88us; 1us; 89us; 2us; 90us; 93us; 1us; 90us; 1us; 91us; 1us; 92us; 1us; 93us; 1us; 94us; 1us; 95us; 1us; 96us; 1us; 97us; 1us; 98us; 1us; 99us; |]
+let _fsyacc_stateToProdIdxsTableRowOffsets = [|0us; 2us; 4us; 6us; 8us; 10us; 12us; 14us; 16us; 18us; 20us; 22us; 24us; 27us; 31us; 36us; 40us; 42us; 58us; 60us; 63us; 65us; 69us; 71us; 75us; 77us; 80us; 82us; 84us; 86us; 88us; 90us; 92us; 94us; 96us; 98us; 100us; 102us; 104us; 106us; 108us; 111us; 113us; 115us; 117us; 119us; 121us; 123us; 125us; 127us; 129us; 131us; 133us; 135us; 137us; 139us; 143us; 145us; 147us; 149us; 165us; 167us; 183us; 185us; 201us; 203us; 205us; 221us; 223us; 226us; 228us; 244us; 246us; 248us; 250us; 254us; 256us; 260us; 278us; 294us; 296us; 300us; 302us; 304us; 307us; 309us; 311us; 314us; 316us; 319us; 336us; 352us; 354us; 357us; 359us; 361us; 363us; 365us; 367us; 383us; 385us; 387us; 389us; 391us; 407us; 409us; 411us; 413us; 415us; 418us; 421us; 424us; 427us; 429us; 431us; 433us; 435us; 447us; 458us; 460us; 463us; 465us; 467us; 483us; 486us; 488us; 490us; 492us; 494us; 510us; 513us; 529us; 533us; 536us; 538us; 554us; 556us; 558us; 574us; 590us; 606us; 622us; 638us; 654us; 670us; 686us; 702us; 718us; 734us; 750us; 766us; 782us; 798us; 814us; 830us; 846us; 861us; 877us; 893us; 909us; 926us; 928us; 930us; 932us; 934us; 936us; 939us; 941us; 944us; 946us; 948us; 950us; 952us; 954us; 956us; 958us; 960us; 962us; 964us; 966us; 968us; 970us; 972us; 974us; 976us; 978us; 980us; 982us; 984us; 987us; 989us; 991us; 993us; 995us; 997us; 1000us; 1002us; 1004us; 1007us; 1009us; 1012us; 1015us; 1017us; 1019us; 1021us; 1023us; 1025us; 1027us; 1029us; 1031us; 1034us; 1036us; 1038us; 1040us; 1042us; 1044us; 1046us; 1048us; 1050us; 1052us; |]
+let _fsyacc_action_rows = 220
+let _fsyacc_actionTableElements = [|5us; 16386us; 34us; 217us; 37us; 216us; 38us; 219us; 43us; 29us; 45us; 218us; 0us; 49152us; 1us; 32768us; 0us; 3us; 0us; 16385us; 5us; 16386us; 34us; 217us; 37us; 216us; 38us; 219us; 43us; 29us; 45us; 218us; 0us; 16387us; 1us; 32768us; 7us; 7us; 0us; 16388us; 0us; 16389us; 1us; 32768us; 7us; 10us; 0us; 16390us; 3us; 32768us; 1us; 22us; 24us; 20us; 54us; 18us; 3us; 32768us; 1us; 22us; 24us; 20us; 54us; 18us; 3us; 32768us; 1us; 22us; 24us; 20us; 54us; 19us; 2us; 16391us; 5us; 25us; 9us; 16us; 1us; 16391us; 5us; 25us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 14us; 16392us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 0us; 16393us; 1us; 16393us; 1us; 35us; 3us; 32768us; 1us; 22us; 24us; 20us; 54us; 18us; 1us; 16394us; 5us; 25us; 3us; 32768us; 1us; 22us; 24us; 20us; 54us; 18us; 2us; 32768us; 2us; 24us; 5us; 25us; 0us; 16395us; 2us; 32768us; 6us; 26us; 55us; 27us; 0us; 16396us; 1us; 32768us; 6us; 28us; 0us; 16397us; 1us; 32768us; 54us; 30us; 1us; 32768us; 1us; 31us; 4us; 16400us; 34us; 217us; 37us; 216us; 38us; 219us; 45us; 218us; 1us; 32768us; 2us; 33us; 1us; 32768us; 3us; 43us; 0us; 16398us; 4us; 16400us; 34us; 217us; 37us; 216us; 38us; 219us; 45us; 218us; 1us; 32768us; 2us; 37us; 1us; 32768us; 3us; 43us; 0us; 16399us; 0us; 16401us; 1us; 16402us; 8us; 41us; 4us; 32768us; 34us; 217us; 37us; 216us; 38us; 219us; 45us; 218us; 0us; 16403us; 27us; 16405us; 1us; 188us; 3us; 43us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 34us; 217us; 36us; 74us; 37us; 216us; 38us; 219us; 39us; 211us; 40us; 129us; 41us; 136us; 42us; 68us; 44us; 86us; 45us; 218us; 46us; 57us; 47us; 94us; 49us; 101us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 1us; 32768us; 4us; 45us; 0us; 16404us; 27us; 16405us; 1us; 188us; 3us; 43us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 34us; 217us; 36us; 74us; 37us; 216us; 38us; 219us; 39us; 211us; 40us; 129us; 41us; 136us; 42us; 68us; 44us; 86us; 45us; 218us; 46us; 57us; 47us; 94us; 49us; 101us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 0us; 16406us; 1us; 32768us; 7us; 49us; 27us; 16405us; 1us; 188us; 3us; 43us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 34us; 217us; 36us; 74us; 37us; 216us; 38us; 219us; 39us; 211us; 40us; 129us; 41us; 136us; 42us; 68us; 44us; 86us; 45us; 218us; 46us; 57us; 47us; 94us; 49us; 101us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 0us; 16407us; 1us; 32768us; 7us; 52us; 27us; 16405us; 1us; 188us; 3us; 43us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 34us; 217us; 36us; 74us; 37us; 216us; 38us; 219us; 39us; 211us; 40us; 129us; 41us; 136us; 42us; 68us; 44us; 86us; 45us; 218us; 46us; 57us; 47us; 94us; 49us; 101us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 0us; 16408us; 0us; 16409us; 1us; 16409us; 35us; 83us; 0us; 16410us; 1us; 32768us; 1us; 58us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 15us; 32768us; 7us; 60us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 15us; 32768us; 7us; 62us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 15us; 32768us; 2us; 64us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 22us; 32768us; 1us; 188us; 3us; 43us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 36us; 73us; 39us; 211us; 40us; 129us; 41us; 136us; 42us; 68us; 44us; 85us; 47us; 94us; 49us; 101us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 0us; 16411us; 15us; 32768us; 7us; 67us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 0us; 16412us; 17us; 32768us; 1us; 188us; 7us; 69us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 0us; 16413us; 15us; 32768us; 7us; 71us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 0us; 16414us; 0us; 16415us; 1us; 32768us; 1us; 75us; 1us; 32768us; 1us; 76us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 15us; 32768us; 2us; 80us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 15us; 32768us; 2us; 79us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 22us; 32768us; 1us; 188us; 3us; 43us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 36us; 73us; 39us; 211us; 40us; 129us; 41us; 136us; 42us; 68us; 44us; 85us; 47us; 94us; 49us; 101us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 23us; 32768us; 1us; 188us; 3us; 43us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 36us; 74us; 39us; 211us; 40us; 129us; 41us; 136us; 42us; 68us; 44us; 86us; 46us; 57us; 47us; 94us; 49us; 101us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 1us; 32768us; 35us; 82us; 22us; 32768us; 1us; 188us; 3us; 43us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 36us; 73us; 39us; 211us; 40us; 129us; 41us; 136us; 42us; 68us; 44us; 85us; 47us; 94us; 49us; 101us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 22us; 32768us; 1us; 188us; 3us; 43us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 36us; 74us; 39us; 211us; 40us; 129us; 41us; 136us; 42us; 68us; 44us; 86us; 47us; 94us; 49us; 101us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 0us; 16416us; 1us; 32768us; 1us; 87us; 1us; 32768us; 1us; 88us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 15us; 32768us; 2us; 92us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 15us; 32768us; 2us; 91us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 22us; 32768us; 1us; 188us; 3us; 43us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 36us; 73us; 39us; 211us; 40us; 129us; 41us; 136us; 42us; 68us; 44us; 85us; 47us; 94us; 49us; 101us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 22us; 32768us; 1us; 188us; 3us; 43us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 36us; 74us; 39us; 211us; 40us; 129us; 41us; 136us; 42us; 68us; 44us; 86us; 47us; 94us; 49us; 101us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 0us; 16417us; 22us; 32768us; 1us; 188us; 3us; 43us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 36us; 73us; 39us; 211us; 40us; 129us; 41us; 136us; 42us; 68us; 44us; 85us; 47us; 94us; 49us; 101us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 1us; 32768us; 44us; 96us; 1us; 32768us; 1us; 97us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 15us; 32768us; 2us; 99us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 1us; 32768us; 7us; 100us; 0us; 16418us; 1us; 32768us; 1us; 102us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 15us; 32768us; 2us; 104us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 1us; 32768us; 3us; 105us; 1us; 32768us; 50us; 108us; 1us; 32768us; 4us; 107us; 0us; 16419us; 9us; 32768us; 1us; 187us; 10us; 193us; 23us; 209us; 39us; 211us; 51us; 212us; 52us; 215us; 53us; 214us; 55us; 207us; 56us; 208us; 1us; 32768us; 11us; 110us; 22us; 32768us; 1us; 188us; 3us; 43us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 36us; 73us; 39us; 211us; 40us; 129us; 41us; 136us; 42us; 68us; 44us; 85us; 47us; 94us; 49us; 101us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 1us; 16420us; 50us; 108us; 0us; 16421us; 0us; 16422us; 0us; 16423us; 0us; 16424us; 10us; 16425us; 2us; 198us; 5us; 202us; 9us; 121us; 27us; 170us; 28us; 171us; 29us; 168us; 30us; 169us; 31us; 172us; 32us; 162us; 33us; 163us; 9us; 16425us; 5us; 202us; 9us; 121us; 27us; 170us; 28us; 171us; 29us; 168us; 30us; 169us; 31us; 172us; 32us; 162us; 33us; 163us; 0us; 16426us; 1us; 16426us; 2us; 189us; 0us; 16427us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 14us; 16428us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 1us; 16463us; 1us; 124us; 16us; 16468us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 1us; 32768us; 2us; 126us; 0us; 16429us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 0us; 16430us; 16us; 32768us; 1us; 131us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 14us; 16431us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 132us; 54us; 123us; 55us; 207us; 56us; 208us; 1us; 16478us; 8us; 133us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 15us; 32768us; 2us; 135us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 0us; 16432us; 0us; 16433us; 4us; 16434us; 12us; 184us; 24us; 173us; 25us; 174us; 26us; 175us; 4us; 16435us; 12us; 184us; 24us; 173us; 25us; 174us; 26us; 175us; 1us; 16440us; 12us; 184us; 1us; 16441us; 12us; 184us; 1us; 16442us; 12us; 184us; 1us; 16443us; 12us; 184us; 1us; 16444us; 12us; 184us; 1us; 16445us; 12us; 184us; 1us; 16446us; 12us; 184us; 1us; 16447us; 12us; 184us; 10us; 16448us; 12us; 184us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 10us; 16449us; 12us; 184us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 10us; 16450us; 12us; 184us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 10us; 16451us; 12us; 184us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 10us; 16452us; 12us; 184us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 10us; 16453us; 12us; 184us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 12us; 16454us; 12us; 184us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 13us; 16455us; 12us; 184us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 14us; 32768us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 15us; 32768us; 11us; 185us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 1us; 16456us; 12us; 184us; 15us; 32768us; 6us; 203us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 15us; 16470us; 8us; 205us; 12us; 184us; 14us; 183us; 15us; 182us; 16us; 176us; 17us; 177us; 18us; 178us; 19us; 179us; 20us; 180us; 21us; 181us; 22us; 160us; 23us; 161us; 24us; 173us; 25us; 174us; 26us; 175us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 0us; 16436us; 0us; 16437us; 3us; 32768us; 1us; 196us; 24us; 199us; 54us; 195us; 1us; 16438us; 5us; 202us; 3us; 32768us; 1us; 196us; 24us; 199us; 54us; 195us; 1us; 16439us; 5us; 202us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 0us; 16457us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 0us; 16458us; 0us; 16459us; 0us; 16460us; 0us; 16461us; 3us; 32768us; 1us; 196us; 24us; 199us; 54us; 195us; 1us; 16462us; 5us; 202us; 0us; 16463us; 3us; 32768us; 1us; 196us; 24us; 199us; 54us; 195us; 2us; 32768us; 2us; 198us; 5us; 202us; 0us; 16464us; 11us; 32768us; 1us; 188us; 10us; 193us; 23us; 209us; 24us; 199us; 39us; 211us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 195us; 55us; 207us; 56us; 208us; 1us; 16465us; 5us; 202us; 0us; 16466us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 0us; 16467us; 0us; 16469us; 16us; 32768us; 1us; 188us; 10us; 193us; 13us; 127us; 23us; 209us; 24us; 199us; 32us; 164us; 33us; 166us; 39us; 211us; 40us; 129us; 41us; 136us; 51us; 212us; 52us; 215us; 53us; 214us; 54us; 123us; 55us; 207us; 56us; 208us; 0us; 16471us; 0us; 16472us; 0us; 16473us; 2us; 32768us; 51us; 213us; 55us; 210us; 0us; 16474us; 0us; 16475us; 0us; 16476us; 0us; 16477us; 0us; 16478us; 0us; 16479us; 0us; 16480us; 0us; 16481us; 0us; 16482us; 0us; 16483us; |]
+let _fsyacc_actionTableRowOffsets = [|0us; 6us; 7us; 9us; 10us; 16us; 17us; 19us; 20us; 21us; 23us; 24us; 28us; 32us; 36us; 39us; 41us; 58us; 73us; 74us; 76us; 80us; 82us; 86us; 89us; 90us; 93us; 94us; 96us; 97us; 99us; 101us; 106us; 108us; 110us; 111us; 116us; 118us; 120us; 121us; 122us; 124us; 129us; 130us; 158us; 160us; 161us; 189us; 190us; 192us; 220us; 221us; 223us; 251us; 252us; 253us; 255us; 256us; 258us; 275us; 291us; 308us; 324us; 341us; 357us; 380us; 381us; 397us; 398us; 416us; 417us; 433us; 434us; 435us; 437us; 439us; 456us; 473us; 489us; 505us; 528us; 552us; 554us; 577us; 600us; 601us; 603us; 605us; 622us; 639us; 655us; 671us; 694us; 717us; 718us; 741us; 743us; 745us; 762us; 778us; 780us; 781us; 783us; 800us; 816us; 818us; 820us; 822us; 823us; 833us; 835us; 858us; 860us; 861us; 862us; 863us; 864us; 875us; 885us; 886us; 888us; 889us; 906us; 921us; 923us; 940us; 942us; 943us; 960us; 961us; 978us; 993us; 1010us; 1012us; 1029us; 1045us; 1046us; 1047us; 1052us; 1057us; 1059us; 1061us; 1063us; 1065us; 1067us; 1069us; 1071us; 1073us; 1084us; 1095us; 1106us; 1117us; 1128us; 1139us; 1152us; 1166us; 1181us; 1197us; 1199us; 1215us; 1231us; 1248us; 1265us; 1266us; 1267us; 1271us; 1273us; 1277us; 1279us; 1296us; 1313us; 1330us; 1347us; 1364us; 1381us; 1398us; 1415us; 1432us; 1449us; 1466us; 1483us; 1500us; 1517us; 1534us; 1551us; 1568us; 1585us; 1586us; 1603us; 1620us; 1621us; 1622us; 1623us; 1624us; 1628us; 1630us; 1631us; 1635us; 1638us; 1639us; 1651us; 1653us; 1654us; 1671us; 1672us; 1673us; 1690us; 1691us; 1692us; 1693us; 1696us; 1697us; 1698us; 1699us; 1700us; 1701us; 1702us; 1703us; 1704us; 1705us; |]
+let _fsyacc_reductionSymbolCounts = [|1us; 2us; 0us; 2us; 2us; 1us; 2us; 2us; 4us; 1us; 2us; 3us; 3us; 4us; 6us; 6us; 0us; 1us; 1us; 3us; 3us; 0us; 2us; 3us; 3us; 1us; 1us; 9us; 2us; 2us; 3us; 1us; 7us; 5us; 7us; 7us; 4us; 5us; 7us; 5us; 5us; 1us; 1us; 1us; 3us; 4us; 2us; 2us; 6us; 1us; 3us; 3us; 2us; 2us; 2us; 2us; 3us; 3us; 3us; 3us; 3us; 3us; 3us; 3us; 3us; 3us; 3us; 3us; 3us; 3us; 3us; 3us; 5us; 1us; 3us; 1us; 1us; 1us; 2us; 1us; 3us; 2us; 2us; 4us; 0us; 1us; 1us; 3us; 1us; 1us; 2us; 1us; 1us; 2us; 1us; 1us; 1us; 1us; 1us; 1us; |]
+let _fsyacc_productionToNonTerminalTable = [|0us; 1us; 2us; 2us; 3us; 3us; 3us; 4us; 5us; 6us; 6us; 6us; 6us; 6us; 7us; 7us; 8us; 8us; 9us; 9us; 10us; 11us; 11us; 11us; 11us; 12us; 12us; 12us; 13us; 13us; 13us; 13us; 13us; 13us; 13us; 13us; 14us; 14us; 15us; 15us; 15us; 16us; 16us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 17us; 18us; 18us; 18us; 18us; 18us; 18us; 19us; 19us; 19us; 19us; 19us; 20us; 20us; 21us; 21us; 22us; 22us; 22us; 22us; 23us; 23us; 24us; 25us; 26us; 26us; 26us; 26us; |]
+let _fsyacc_immediateActions = [|65535us; 49152us; 65535us; 16385us; 65535us; 16387us; 65535us; 16388us; 16389us; 65535us; 16390us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 16393us; 65535us; 65535us; 65535us; 65535us; 65535us; 16395us; 65535us; 16396us; 65535us; 16397us; 65535us; 65535us; 65535us; 65535us; 65535us; 16398us; 65535us; 65535us; 65535us; 16399us; 16401us; 65535us; 65535us; 16403us; 65535us; 65535us; 16404us; 65535us; 16406us; 65535us; 65535us; 16407us; 65535us; 65535us; 16408us; 16409us; 65535us; 16410us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 16411us; 65535us; 16412us; 65535us; 16413us; 65535us; 16414us; 16415us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 16416us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 16417us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 16418us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 16419us; 65535us; 65535us; 65535us; 65535us; 16421us; 16422us; 16423us; 16424us; 65535us; 65535us; 16426us; 65535us; 16427us; 65535us; 65535us; 65535us; 65535us; 65535us; 16429us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 16432us; 16433us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 16436us; 16437us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 65535us; 16457us; 65535us; 65535us; 16458us; 16459us; 16460us; 16461us; 65535us; 65535us; 16463us; 65535us; 65535us; 16464us; 65535us; 65535us; 16466us; 65535us; 16467us; 16469us; 65535us; 16471us; 16472us; 16473us; 65535us; 16474us; 16475us; 16476us; 16477us; 16478us; 16479us; 16480us; 16481us; 16482us; 16483us; |]
 let _fsyacc_reductions ()  =    [| 
-# 507 "CPar.fs"
+# 542 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> Absyn.program in
             Microsoft.FSharp.Core.Operators.box
@@ -513,85 +548,85 @@ let _fsyacc_reductions ()  =    [|
                       raise (FSharp.Text.Parsing.Accept(Microsoft.FSharp.Core.Operators.box _1))
                    )
                  : 'gentype__startMain));
-# 516 "CPar.fs"
+# 551 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Topdecs in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 53 "CPar.fsy"
+# 52 "CPar.fsy"
                                                                Prog _1 
                    )
-# 53 "CPar.fsy"
+# 52 "CPar.fsy"
                  : Absyn.program));
-# 527 "CPar.fs"
+# 562 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 58 "CPar.fsy"
+# 57 "CPar.fsy"
                                                                [] 
                    )
-# 58 "CPar.fsy"
+# 57 "CPar.fsy"
                  : 'gentype_Topdecs));
-# 537 "CPar.fs"
+# 572 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Topdec in
             let _2 = parseState.GetInput(2) :?> 'gentype_Topdecs in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 59 "CPar.fsy"
+# 58 "CPar.fsy"
                                                                _1 :: _2 
                    )
-# 59 "CPar.fsy"
+# 58 "CPar.fsy"
                  : 'gentype_Topdecs));
-# 549 "CPar.fs"
+# 584 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Vardec in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 63 "CPar.fsy"
+# 62 "CPar.fsy"
                                                                Vardec (fst _1, snd _1) 
                    )
-# 63 "CPar.fsy"
+# 62 "CPar.fsy"
                  : 'gentype_Topdec));
-# 560 "CPar.fs"
+# 595 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Fundec in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 64 "CPar.fsy"
+# 63 "CPar.fsy"
                                                                _1 
                    )
-# 64 "CPar.fsy"
+# 63 "CPar.fsy"
                  : 'gentype_Topdec));
-# 571 "CPar.fs"
+# 606 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_VardecAndAssignment in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 65 "CPar.fsy"
+# 64 "CPar.fsy"
                                                                VardecAndAssignment (first _1, second _1 ,third _1)  
                    )
-# 65 "CPar.fsy"
+# 64 "CPar.fsy"
                  : 'gentype_Topdec));
-# 582 "CPar.fs"
+# 617 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Type in
             let _2 = parseState.GetInput(2) :?> 'gentype_Vardesc in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 84 "CPar.fsy"
+# 83 "CPar.fsy"
                                                                ((fst _2) _1, snd _2) 
                    )
-# 84 "CPar.fsy"
+# 83 "CPar.fsy"
                  : 'gentype_Vardec));
-# 594 "CPar.fs"
+# 629 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Type in
             let _2 = parseState.GetInput(2) :?> 'gentype_Vardesc in
@@ -599,68 +634,68 @@ let _fsyacc_reductions ()  =    [|
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 90 "CPar.fsy"
+# 89 "CPar.fsy"
                                                        ((fst _2) _1, snd _2 , _4) 
                    )
-# 90 "CPar.fsy"
+# 89 "CPar.fsy"
                  : 'gentype_VardecAndAssignment));
-# 607 "CPar.fs"
+# 642 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> string in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 101 "CPar.fsy"
+# 100 "CPar.fsy"
                                                                ((fun t -> t), _1)                      
                    )
-# 101 "CPar.fsy"
+# 100 "CPar.fsy"
                  : 'gentype_Vardesc));
-# 618 "CPar.fs"
+# 653 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> 'gentype_Vardesc in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 106 "CPar.fsy"
+# 105 "CPar.fsy"
                                                                compose1 TypP _2                        
                    )
-# 106 "CPar.fsy"
+# 105 "CPar.fsy"
                  : 'gentype_Vardesc));
-# 629 "CPar.fs"
+# 664 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> 'gentype_Vardesc in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 108 "CPar.fsy"
+# 107 "CPar.fsy"
                                                                _2                                      
                    )
-# 108 "CPar.fsy"
+# 107 "CPar.fsy"
                  : 'gentype_Vardesc));
-# 640 "CPar.fs"
+# 675 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Vardesc in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 110 "CPar.fsy"
+# 109 "CPar.fsy"
                                                                compose1 (fun t -> TypA(t, None)) _1    
                    )
-# 110 "CPar.fsy"
+# 109 "CPar.fsy"
                  : 'gentype_Vardesc));
-# 651 "CPar.fs"
+# 686 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Vardesc in
             let _3 = parseState.GetInput(3) :?> int in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 112 "CPar.fsy"
+# 111 "CPar.fsy"
                                                                compose1 (fun t -> TypA(t, Some _3)) _1 
                    )
-# 112 "CPar.fsy"
+# 111 "CPar.fsy"
                  : 'gentype_Vardesc));
-# 663 "CPar.fs"
+# 698 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> string in
             let _4 = parseState.GetInput(4) :?> 'gentype_Paramdecs in
@@ -668,12 +703,12 @@ let _fsyacc_reductions ()  =    [|
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 117 "CPar.fsy"
+# 116 "CPar.fsy"
                                                                Fundec(None,     _2, _4, _6) 
                    )
-# 117 "CPar.fsy"
+# 116 "CPar.fsy"
                  : 'gentype_Fundec));
-# 676 "CPar.fs"
+# 711 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Type in
             let _2 = parseState.GetInput(2) :?> string in
@@ -682,135 +717,135 @@ let _fsyacc_reductions ()  =    [|
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 119 "CPar.fsy"
+# 118 "CPar.fsy"
                                                                Fundec(Some(_1), _2, _4, _6) 
                    )
-# 119 "CPar.fsy"
+# 118 "CPar.fsy"
                  : 'gentype_Fundec));
-# 690 "CPar.fs"
+# 725 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 124 "CPar.fsy"
+# 123 "CPar.fsy"
                                                                [] 
                    )
-# 124 "CPar.fsy"
+# 123 "CPar.fsy"
                  : 'gentype_Paramdecs));
-# 700 "CPar.fs"
+# 735 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Paramdecs1 in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 125 "CPar.fsy"
+# 124 "CPar.fsy"
                                                                _1 
                    )
-# 125 "CPar.fsy"
+# 124 "CPar.fsy"
                  : 'gentype_Paramdecs));
-# 711 "CPar.fs"
+# 746 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Vardec in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 129 "CPar.fsy"
+# 128 "CPar.fsy"
                                                                [_1]     
                    )
-# 129 "CPar.fsy"
+# 128 "CPar.fsy"
                  : 'gentype_Paramdecs1));
-# 722 "CPar.fs"
+# 757 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Vardec in
             let _3 = parseState.GetInput(3) :?> 'gentype_Paramdecs1 in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 130 "CPar.fsy"
+# 129 "CPar.fsy"
                                                                _1 :: _3 
                    )
-# 130 "CPar.fsy"
+# 129 "CPar.fsy"
                  : 'gentype_Paramdecs1));
-# 734 "CPar.fs"
+# 769 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> 'gentype_StmtOrDecSeq in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 135 "CPar.fsy"
+# 134 "CPar.fsy"
                                                                Block _2 
                    )
-# 135 "CPar.fsy"
+# 134 "CPar.fsy"
                  : 'gentype_Block));
-# 745 "CPar.fs"
+# 780 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 139 "CPar.fsy"
+# 138 "CPar.fsy"
                                                                [] 
                    )
-# 139 "CPar.fsy"
+# 138 "CPar.fsy"
                  : 'gentype_StmtOrDecSeq));
-# 755 "CPar.fs"
+# 790 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Stmt in
             let _2 = parseState.GetInput(2) :?> 'gentype_StmtOrDecSeq in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 140 "CPar.fsy"
+# 139 "CPar.fsy"
                                                                Stmt _1 :: _2 
                    )
-# 140 "CPar.fsy"
+# 139 "CPar.fsy"
                  : 'gentype_StmtOrDecSeq));
-# 767 "CPar.fs"
+# 802 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Vardec in
             let _3 = parseState.GetInput(3) :?> 'gentype_StmtOrDecSeq in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 141 "CPar.fsy"
+# 140 "CPar.fsy"
                                                                Dec (fst _1, snd _1) :: _3 
                    )
-# 141 "CPar.fsy"
+# 140 "CPar.fsy"
                  : 'gentype_StmtOrDecSeq));
-# 779 "CPar.fs"
+# 814 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_VardecAndAssignment in
             let _3 = parseState.GetInput(3) :?> 'gentype_StmtOrDecSeq in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 142 "CPar.fsy"
+# 141 "CPar.fsy"
                                                                   DecAndAssign (first _1, second _1, third _1) :: _3 
                    )
-# 142 "CPar.fsy"
+# 141 "CPar.fsy"
                  : 'gentype_StmtOrDecSeq));
-# 791 "CPar.fs"
+# 826 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_StmtM in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 147 "CPar.fsy"
+# 146 "CPar.fsy"
                                                                _1 
                    )
-# 147 "CPar.fsy"
+# 146 "CPar.fsy"
                  : 'gentype_Stmt));
-# 802 "CPar.fs"
+# 837 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_StmtU in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 148 "CPar.fsy"
+# 147 "CPar.fsy"
                                                                _1 
                    )
-# 148 "CPar.fsy"
+# 147 "CPar.fsy"
                  : 'gentype_Stmt));
-# 813 "CPar.fs"
+# 848 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             let _5 = parseState.GetInput(5) :?> 'gentype_Expr in
@@ -819,55 +854,55 @@ let _fsyacc_reductions ()  =    [|
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 149 "CPar.fsy"
+# 148 "CPar.fsy"
                                                                         For(_3,_5,_7,_9)  
                    )
-# 149 "CPar.fsy"
+# 148 "CPar.fsy"
                  : 'gentype_Stmt));
-# 827 "CPar.fs"
+# 862 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 153 "CPar.fsy"
+# 152 "CPar.fsy"
                                                                Expr(_1)             
                    )
-# 153 "CPar.fsy"
+# 152 "CPar.fsy"
                  : 'gentype_StmtM));
-# 838 "CPar.fs"
+# 873 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 154 "CPar.fsy"
+# 153 "CPar.fsy"
                                                                Return None          
                    )
-# 154 "CPar.fsy"
+# 153 "CPar.fsy"
                  : 'gentype_StmtM));
-# 848 "CPar.fs"
+# 883 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 155 "CPar.fsy"
+# 154 "CPar.fsy"
                                                                Return(Some(_2))     
                    )
-# 155 "CPar.fsy"
+# 154 "CPar.fsy"
                  : 'gentype_StmtM));
-# 859 "CPar.fs"
+# 894 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Block in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 156 "CPar.fsy"
+# 155 "CPar.fsy"
                                                                _1                   
                    )
-# 156 "CPar.fsy"
+# 155 "CPar.fsy"
                  : 'gentype_StmtM));
-# 870 "CPar.fs"
+# 905 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             let _5 = parseState.GetInput(5) :?> 'gentype_StmtM in
@@ -875,60 +910,60 @@ let _fsyacc_reductions ()  =    [|
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 157 "CPar.fsy"
+# 156 "CPar.fsy"
                                                                If(_3, _5, _7)       
                    )
-# 157 "CPar.fsy"
+# 156 "CPar.fsy"
                  : 'gentype_StmtM));
-# 883 "CPar.fs"
+# 918 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             let _5 = parseState.GetInput(5) :?> 'gentype_StmtM in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 158 "CPar.fsy"
+# 157 "CPar.fsy"
                                                                While(_3, _5)        
                    )
-# 158 "CPar.fsy"
+# 157 "CPar.fsy"
                  : 'gentype_StmtM));
-# 895 "CPar.fs"
+# 930 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> 'gentype_StmtM in
             let _5 = parseState.GetInput(5) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 159 "CPar.fsy"
+# 158 "CPar.fsy"
                                                                DoWhile(_2, _5)      
                    )
-# 159 "CPar.fsy"
+# 158 "CPar.fsy"
                  : 'gentype_StmtM));
-# 907 "CPar.fs"
+# 942 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             let _6 = parseState.GetInput(6) :?> 'gentype_ExecCase in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 160 "CPar.fsy"
+# 159 "CPar.fsy"
                                                                         Switch(_3, _6) 
                    )
-# 160 "CPar.fsy"
+# 159 "CPar.fsy"
                  : 'gentype_StmtM));
-# 919 "CPar.fs"
+# 954 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> 'gentype_AtExprNotAccess in
             let _4 = parseState.GetInput(4) :?> 'gentype_StmtM in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 164 "CPar.fsy"
+# 163 "CPar.fsy"
                                                                           [Case(_2,_4)] 
                    )
-# 164 "CPar.fsy"
+# 163 "CPar.fsy"
                  : 'gentype_ExecCase));
-# 931 "CPar.fs"
+# 966 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> 'gentype_AtExprNotAccess in
             let _4 = parseState.GetInput(4) :?> 'gentype_StmtM in
@@ -936,12 +971,12 @@ let _fsyacc_reductions ()  =    [|
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 165 "CPar.fsy"
+# 164 "CPar.fsy"
                                                                           Case(_2,_4) :: _5
                    )
-# 165 "CPar.fsy"
+# 164 "CPar.fsy"
                  : 'gentype_ExecCase));
-# 944 "CPar.fs"
+# 979 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             let _5 = parseState.GetInput(5) :?> 'gentype_StmtM in
@@ -949,337 +984,397 @@ let _fsyacc_reductions ()  =    [|
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 169 "CPar.fsy"
+# 168 "CPar.fsy"
                                                                If(_3, _5, _7)       
                    )
-# 169 "CPar.fsy"
+# 168 "CPar.fsy"
                  : 'gentype_StmtU));
-# 957 "CPar.fs"
+# 992 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             let _5 = parseState.GetInput(5) :?> 'gentype_Stmt in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 170 "CPar.fsy"
+# 169 "CPar.fsy"
                                                                If(_3, _5, Block []) 
                    )
-# 170 "CPar.fsy"
+# 169 "CPar.fsy"
                  : 'gentype_StmtU));
-# 969 "CPar.fs"
+# 1004 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             let _5 = parseState.GetInput(5) :?> 'gentype_StmtU in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 171 "CPar.fsy"
+# 170 "CPar.fsy"
                                                                While(_3, _5)        
                    )
-# 171 "CPar.fsy"
+# 170 "CPar.fsy"
                  : 'gentype_StmtU));
-# 981 "CPar.fs"
+# 1016 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Access in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 175 "CPar.fsy"
+# 174 "CPar.fsy"
                                                                Access _1           
                    )
-# 175 "CPar.fsy"
+# 174 "CPar.fsy"
                  : 'gentype_Expr));
-# 992 "CPar.fs"
+# 1027 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_ExprNotAccess in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 176 "CPar.fsy"
+# 175 "CPar.fsy"
                                                                _1                  
                    )
-# 176 "CPar.fsy"
+# 175 "CPar.fsy"
                  : 'gentype_Expr));
-# 1003 "CPar.fs"
+# 1038 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_AtExprNotAccess in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 180 "CPar.fsy"
+# 179 "CPar.fsy"
                                                                _1                  
                    )
-# 180 "CPar.fsy"
+# 179 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
-# 1014 "CPar.fs"
+# 1049 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Access in
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 181 "CPar.fsy"
+# 180 "CPar.fsy"
                                                                Assign(_1, _3)      
                    )
-# 181 "CPar.fsy"
+# 180 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
-# 1026 "CPar.fs"
+# 1061 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> string in
             let _3 = parseState.GetInput(3) :?> 'gentype_Exprs in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 182 "CPar.fsy"
+# 181 "CPar.fsy"
                                                                Call(_1, _3)        
                    )
-# 182 "CPar.fsy"
+# 181 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
-# 1038 "CPar.fs"
+# 1073 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 183 "CPar.fsy"
+# 182 "CPar.fsy"
                                                                Prim1("!", _2)      
                    )
-# 183 "CPar.fsy"
+# 182 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
-# 1049 "CPar.fs"
+# 1084 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 184 "CPar.fsy"
+# 183 "CPar.fsy"
                                                                Prim1("printi", _2) 
                    )
-# 184 "CPar.fsy"
+# 183 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
-# 1060 "CPar.fs"
+# 1095 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _3 = parseState.GetInput(3) :?> string in
             let _5 = parseState.GetInput(5) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 185 "CPar.fsy"
+# 184 "CPar.fsy"
                                                                Print(_3 , _5)      
                    )
-# 185 "CPar.fsy"
+# 184 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
-# 1072 "CPar.fs"
+# 1107 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 186 "CPar.fsy"
+# 185 "CPar.fsy"
                                                                Prim1("prin tc", nl)
                    )
-# 186 "CPar.fsy"
-                 : 'gentype_ExprNotAccess));
-# 1082 "CPar.fs"
-        (fun (parseState : FSharp.Text.Parsing.IParseState) ->
-            let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
-            let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
-            Microsoft.FSharp.Core.Operators.box
-                (
-                   (
-# 187 "CPar.fsy"
-                                                               Prim2("+",  _1, _3) 
-                   )
-# 187 "CPar.fsy"
-                 : 'gentype_ExprNotAccess));
-# 1094 "CPar.fs"
-        (fun (parseState : FSharp.Text.Parsing.IParseState) ->
-            let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
-            let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
-            Microsoft.FSharp.Core.Operators.box
-                (
-                   (
-# 188 "CPar.fsy"
-                                                               Prim2("-",  _1, _3) 
-                   )
-# 188 "CPar.fsy"
-                 : 'gentype_ExprNotAccess));
-# 1106 "CPar.fs"
-        (fun (parseState : FSharp.Text.Parsing.IParseState) ->
-            let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
-            Microsoft.FSharp.Core.Operators.box
-                (
-                   (
-# 190 "CPar.fsy"
-                                                               Prim1("W++",_1)      
-                   )
-# 190 "CPar.fsy"
+# 185 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
 # 1117 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
+            let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 191 "CPar.fsy"
-                                                               Prim1("W--",_1)      
+# 186 "CPar.fsy"
+                                                               Prim2("+",  _1, _3) 
                    )
-# 191 "CPar.fsy"
+# 186 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
-# 1128 "CPar.fs"
-        (fun (parseState : FSharp.Text.Parsing.IParseState) ->
-            let _2 = parseState.GetInput(2) :?> 'gentype_Expr in
-            Microsoft.FSharp.Core.Operators.box
-                (
-                   (
-# 192 "CPar.fsy"
-                                                               Prim1("++W", _2)     
-                   )
-# 192 "CPar.fsy"
-                 : 'gentype_ExprNotAccess));
-# 1139 "CPar.fs"
-        (fun (parseState : FSharp.Text.Parsing.IParseState) ->
-            let _2 = parseState.GetInput(2) :?> 'gentype_Expr in
-            Microsoft.FSharp.Core.Operators.box
-                (
-                   (
-# 193 "CPar.fsy"
-                                                               Prim1("--W", _2)     
-                   )
-# 193 "CPar.fsy"
-                 : 'gentype_ExprNotAccess));
-# 1150 "CPar.fs"
+# 1129 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 196 "CPar.fsy"
-                                                               Prim2("*",  _1, _3) 
+# 187 "CPar.fsy"
+                                                               Prim2("-",  _1, _3) 
                    )
-# 196 "CPar.fsy"
+# 187 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
-# 1162 "CPar.fs"
+# 1141 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
-            let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
-            let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
+            let _1 = parseState.GetInput(1) :?> 'gentype_Access in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 197 "CPar.fsy"
-                                                               Prim2("/",  _1, _3) 
+# 189 "CPar.fsy"
+                                                               SimpleOpt("I++", _1, CstI 1 )   
                    )
-# 197 "CPar.fsy"
+# 189 "CPar.fsy"
+                 : 'gentype_ExprNotAccess));
+# 1152 "CPar.fs"
+        (fun (parseState : FSharp.Text.Parsing.IParseState) ->
+            let _1 = parseState.GetInput(1) :?> 'gentype_Access in
+            Microsoft.FSharp.Core.Operators.box
+                (
+                   (
+# 190 "CPar.fsy"
+                                                               SimpleOpt("I--", _1, CstI 1 )   
+                   )
+# 190 "CPar.fsy"
+                 : 'gentype_ExprNotAccess));
+# 1163 "CPar.fs"
+        (fun (parseState : FSharp.Text.Parsing.IParseState) ->
+            let _2 = parseState.GetInput(2) :?> 'gentype_Access in
+            Microsoft.FSharp.Core.Operators.box
+                (
+                   (
+# 191 "CPar.fsy"
+                                                               SimpleOpt("++I", _2, CstI 1 )   
+                   )
+# 191 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
 # 1174 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
+            let _2 = parseState.GetInput(2) :?> 'gentype_Access in
+            Microsoft.FSharp.Core.Operators.box
+                (
+                   (
+# 192 "CPar.fsy"
+                                                               SimpleOpt("--I", _2, CstI 1 )   
+                   )
+# 192 "CPar.fsy"
+                 : 'gentype_ExprNotAccess));
+# 1185 "CPar.fs"
+        (fun (parseState : FSharp.Text.Parsing.IParseState) ->
+            let _1 = parseState.GetInput(1) :?> 'gentype_Access in
+            let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
+            Microsoft.FSharp.Core.Operators.box
+                (
+                   (
+# 193 "CPar.fsy"
+                                                               SimpleOpt("*=", _1, _3 ) 
+                   )
+# 193 "CPar.fsy"
+                 : 'gentype_ExprNotAccess));
+# 1197 "CPar.fs"
+        (fun (parseState : FSharp.Text.Parsing.IParseState) ->
+            let _1 = parseState.GetInput(1) :?> 'gentype_Access in
+            let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
+            Microsoft.FSharp.Core.Operators.box
+                (
+                   (
+# 194 "CPar.fsy"
+                                                               SimpleOpt("/=", _1, _3 ) 
+                   )
+# 194 "CPar.fsy"
+                 : 'gentype_ExprNotAccess));
+# 1209 "CPar.fs"
+        (fun (parseState : FSharp.Text.Parsing.IParseState) ->
+            let _1 = parseState.GetInput(1) :?> 'gentype_Access in
+            let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
+            Microsoft.FSharp.Core.Operators.box
+                (
+                   (
+# 195 "CPar.fsy"
+                                                               SimpleOpt("+=", _1, _3 ) 
+                   )
+# 195 "CPar.fsy"
+                 : 'gentype_ExprNotAccess));
+# 1221 "CPar.fs"
+        (fun (parseState : FSharp.Text.Parsing.IParseState) ->
+            let _1 = parseState.GetInput(1) :?> 'gentype_Access in
+            let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
+            Microsoft.FSharp.Core.Operators.box
+                (
+                   (
+# 196 "CPar.fsy"
+                                                               SimpleOpt("-=", _1, _3 ) 
+                   )
+# 196 "CPar.fsy"
+                 : 'gentype_ExprNotAccess));
+# 1233 "CPar.fs"
+        (fun (parseState : FSharp.Text.Parsing.IParseState) ->
+            let _1 = parseState.GetInput(1) :?> 'gentype_Access in
+            let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
+            Microsoft.FSharp.Core.Operators.box
+                (
+                   (
+# 197 "CPar.fsy"
+                                                               SimpleOpt("%=", _1, _3 ) 
+                   )
+# 197 "CPar.fsy"
+                 : 'gentype_ExprNotAccess));
+# 1245 "CPar.fs"
+        (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 198 "CPar.fsy"
+# 200 "CPar.fsy"
+                                                               Prim2("*",  _1, _3) 
+                   )
+# 200 "CPar.fsy"
+                 : 'gentype_ExprNotAccess));
+# 1257 "CPar.fs"
+        (fun (parseState : FSharp.Text.Parsing.IParseState) ->
+            let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
+            let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
+            Microsoft.FSharp.Core.Operators.box
+                (
+                   (
+# 201 "CPar.fsy"
+                                                               Prim2("/",  _1, _3) 
+                   )
+# 201 "CPar.fsy"
+                 : 'gentype_ExprNotAccess));
+# 1269 "CPar.fs"
+        (fun (parseState : FSharp.Text.Parsing.IParseState) ->
+            let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
+            let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
+            Microsoft.FSharp.Core.Operators.box
+                (
+                   (
+# 202 "CPar.fsy"
                                                                Prim2("%",  _1, _3) 
                    )
-# 198 "CPar.fsy"
+# 202 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
-# 1186 "CPar.fs"
+# 1281 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 199 "CPar.fsy"
+# 203 "CPar.fsy"
                                                                Prim2("==", _1, _3) 
                    )
-# 199 "CPar.fsy"
+# 203 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
-# 1198 "CPar.fs"
+# 1293 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 200 "CPar.fsy"
+# 204 "CPar.fsy"
                                                                Prim2("!=", _1, _3) 
                    )
-# 200 "CPar.fsy"
+# 204 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
-# 1210 "CPar.fs"
+# 1305 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 201 "CPar.fsy"
+# 205 "CPar.fsy"
                                                                Prim2(">",  _1, _3) 
                    )
-# 201 "CPar.fsy"
+# 205 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
-# 1222 "CPar.fs"
+# 1317 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 202 "CPar.fsy"
+# 206 "CPar.fsy"
                                                                Prim2("<",  _1, _3) 
                    )
-# 202 "CPar.fsy"
+# 206 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
-# 1234 "CPar.fs"
+# 1329 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 203 "CPar.fsy"
+# 207 "CPar.fsy"
                                                                Prim2(">=", _1, _3) 
                    )
-# 203 "CPar.fsy"
+# 207 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
-# 1246 "CPar.fs"
+# 1341 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 204 "CPar.fsy"
+# 208 "CPar.fsy"
                                                                Prim2("<=", _1, _3) 
                    )
-# 204 "CPar.fsy"
+# 208 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
-# 1258 "CPar.fs"
+# 1353 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 205 "CPar.fsy"
+# 209 "CPar.fsy"
                                                                Andalso(_1, _3)     
                    )
-# 205 "CPar.fsy"
+# 209 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
-# 1270 "CPar.fs"
+# 1365 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 206 "CPar.fsy"
+# 210 "CPar.fsy"
                                                                Orelse(_1, _3)      
                    )
-# 206 "CPar.fsy"
+# 210 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
-# 1282 "CPar.fs"
+# 1377 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
@@ -1287,306 +1382,306 @@ let _fsyacc_reductions ()  =    [|
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 208 "CPar.fsy"
+# 212 "CPar.fsy"
                                                                Prim3(_1, _3, _5)   
                    )
-# 208 "CPar.fsy"
+# 212 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
-# 1295 "CPar.fs"
+# 1390 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Const in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 217 "CPar.fsy"
+# 221 "CPar.fsy"
                                                                CstI _1             
                    )
-# 217 "CPar.fsy"
+# 221 "CPar.fsy"
                  : 'gentype_AtExprNotAccess));
-# 1306 "CPar.fs"
+# 1401 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> 'gentype_ExprNotAccess in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 218 "CPar.fsy"
+# 222 "CPar.fsy"
                                                                _2                  
                    )
-# 218 "CPar.fsy"
+# 222 "CPar.fsy"
                  : 'gentype_AtExprNotAccess));
-# 1317 "CPar.fs"
+# 1412 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_ConstChar in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 219 "CPar.fsy"
+# 223 "CPar.fsy"
                                                                ConstChar(_1)       
                    )
-# 219 "CPar.fsy"
+# 223 "CPar.fsy"
                  : 'gentype_AtExprNotAccess));
-# 1328 "CPar.fs"
+# 1423 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_ConstString in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 220 "CPar.fsy"
+# 224 "CPar.fsy"
                                                                ConstString(_1)     
                    )
-# 220 "CPar.fsy"
+# 224 "CPar.fsy"
                  : 'gentype_AtExprNotAccess));
-# 1339 "CPar.fs"
+# 1434 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_ConstFloat in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 221 "CPar.fsy"
+# 225 "CPar.fsy"
                                                                ConstFloat(_1)      
                    )
-# 221 "CPar.fsy"
+# 225 "CPar.fsy"
                  : 'gentype_AtExprNotAccess));
-# 1350 "CPar.fs"
+# 1445 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> 'gentype_Access in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 222 "CPar.fsy"
+# 226 "CPar.fsy"
                                                                Addr _2             
                    )
-# 222 "CPar.fsy"
+# 226 "CPar.fsy"
                  : 'gentype_AtExprNotAccess));
-# 1361 "CPar.fs"
+# 1456 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> string in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 226 "CPar.fsy"
+# 230 "CPar.fsy"
                                                                AccVar _1           
                    )
-# 226 "CPar.fsy"
+# 230 "CPar.fsy"
                  : 'gentype_Access));
-# 1372 "CPar.fs"
+# 1467 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> 'gentype_Access in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 227 "CPar.fsy"
+# 231 "CPar.fsy"
                                                                _2                  
                    )
-# 227 "CPar.fsy"
+# 231 "CPar.fsy"
                  : 'gentype_Access));
-# 1383 "CPar.fs"
+# 1478 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> 'gentype_Access in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 228 "CPar.fsy"
+# 232 "CPar.fsy"
                                                                AccDeref (Access _2)
                    )
-# 228 "CPar.fsy"
+# 232 "CPar.fsy"
                  : 'gentype_Access));
-# 1394 "CPar.fs"
+# 1489 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> 'gentype_AtExprNotAccess in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 229 "CPar.fsy"
+# 233 "CPar.fsy"
                                                                AccDeref _2         
                    )
-# 229 "CPar.fsy"
+# 233 "CPar.fsy"
                  : 'gentype_Access));
-# 1405 "CPar.fs"
+# 1500 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Access in
             let _3 = parseState.GetInput(3) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 230 "CPar.fsy"
+# 234 "CPar.fsy"
                                                                AccIndex(_1, _3)    
                    )
-# 230 "CPar.fsy"
+# 234 "CPar.fsy"
                  : 'gentype_Access));
-# 1417 "CPar.fs"
+# 1512 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 234 "CPar.fsy"
+# 238 "CPar.fsy"
                                                                []       
                    )
-# 234 "CPar.fsy"
+# 238 "CPar.fsy"
                  : 'gentype_Exprs));
-# 1427 "CPar.fs"
+# 1522 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Exprs1 in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 235 "CPar.fsy"
+# 239 "CPar.fsy"
                                                                _1       
                    )
-# 235 "CPar.fsy"
+# 239 "CPar.fsy"
                  : 'gentype_Exprs));
-# 1438 "CPar.fs"
+# 1533 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 239 "CPar.fsy"
+# 243 "CPar.fsy"
                                                                [_1]     
                    )
-# 239 "CPar.fsy"
+# 243 "CPar.fsy"
                  : 'gentype_Exprs1));
-# 1449 "CPar.fs"
+# 1544 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> 'gentype_Expr in
             let _3 = parseState.GetInput(3) :?> 'gentype_Exprs1 in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 240 "CPar.fsy"
+# 244 "CPar.fsy"
                                                                _1 :: _3 
                    )
-# 240 "CPar.fsy"
+# 244 "CPar.fsy"
                  : 'gentype_Exprs1));
-# 1461 "CPar.fs"
+# 1556 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> int in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 244 "CPar.fsy"
+# 248 "CPar.fsy"
                                                                _1       
                    )
-# 244 "CPar.fsy"
+# 248 "CPar.fsy"
                  : 'gentype_Const));
-# 1472 "CPar.fs"
+# 1567 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> int in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 245 "CPar.fsy"
+# 249 "CPar.fsy"
                                                                _1       
                    )
-# 245 "CPar.fsy"
+# 249 "CPar.fsy"
                  : 'gentype_Const));
-# 1483 "CPar.fs"
+# 1578 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> int in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 246 "CPar.fsy"
+# 250 "CPar.fsy"
                                                                - _2     
                    )
-# 246 "CPar.fsy"
+# 250 "CPar.fsy"
                  : 'gentype_Const));
-# 1494 "CPar.fs"
+# 1589 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 247 "CPar.fsy"
+# 251 "CPar.fsy"
                                                                -1       
                    )
-# 247 "CPar.fsy"
+# 251 "CPar.fsy"
                  : 'gentype_Const));
-# 1504 "CPar.fs"
+# 1599 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> float32 in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 251 "CPar.fsy"
+# 255 "CPar.fsy"
                                                                _1       
                    )
-# 251 "CPar.fsy"
+# 255 "CPar.fsy"
                  : 'gentype_ConstFloat));
-# 1515 "CPar.fs"
+# 1610 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _2 = parseState.GetInput(2) :?> float32 in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 252 "CPar.fsy"
+# 256 "CPar.fsy"
                                                                - _2     
                    )
-# 252 "CPar.fsy"
+# 256 "CPar.fsy"
                  : 'gentype_ConstFloat));
-# 1526 "CPar.fs"
+# 1621 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> string in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 255 "CPar.fsy"
+# 259 "CPar.fsy"
                                                                _1       
                    )
-# 255 "CPar.fsy"
+# 259 "CPar.fsy"
                  : 'gentype_ConstString));
-# 1537 "CPar.fs"
+# 1632 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             let _1 = parseState.GetInput(1) :?> char in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 259 "CPar.fsy"
+# 263 "CPar.fsy"
                                                                _1       
                    )
-# 259 "CPar.fsy"
+# 263 "CPar.fsy"
                  : 'gentype_ConstChar));
-# 1548 "CPar.fs"
+# 1643 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 263 "CPar.fsy"
+# 267 "CPar.fsy"
                                                                TypI     
                    )
-# 263 "CPar.fsy"
+# 267 "CPar.fsy"
                  : 'gentype_Type));
-# 1558 "CPar.fs"
+# 1653 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 264 "CPar.fsy"
+# 268 "CPar.fsy"
                                                                TypC     
                    )
-# 264 "CPar.fsy"
+# 268 "CPar.fsy"
                  : 'gentype_Type));
-# 1568 "CPar.fs"
+# 1663 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 265 "CPar.fsy"
+# 269 "CPar.fsy"
                                                                TypS     
                    )
-# 265 "CPar.fsy"
+# 269 "CPar.fsy"
                  : 'gentype_Type));
-# 1578 "CPar.fs"
+# 1673 "CPar.fs"
         (fun (parseState : FSharp.Text.Parsing.IParseState) ->
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 266 "CPar.fsy"
+# 270 "CPar.fsy"
                                                                TypeFloat    
                    )
-# 266 "CPar.fsy"
+# 270 "CPar.fsy"
                  : 'gentype_Type));
 |]
-# 1589 "CPar.fs"
+# 1684 "CPar.fs"
 let tables : FSharp.Text.Parsing.Tables<_> = 
   { reductions= _fsyacc_reductions ();
     endOfInputTag = _fsyacc_endOfInputTag;
@@ -1605,7 +1700,7 @@ let tables : FSharp.Text.Parsing.Tables<_> =
                               match parse_error_rich with 
                               | Some f -> f ctxt
                               | None -> parse_error ctxt.Message);
-    numTerminals = 55;
+    numTerminals = 60;
     productionToNonTerminalTable = _fsyacc_productionToNonTerminalTable  }
 let engine lexer lexbuf startState = tables.Interpret(lexer, lexbuf, startState)
 let Main lexer lexbuf : Absyn.program =

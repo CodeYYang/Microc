@@ -35,6 +35,9 @@ and expr =                           // 表达式，右值
   | Print of string * expr           
   | ConstFloat of float32
   | Prim3 of expr * expr * expr      (* Ternary primitive operator   *)
+  
+  | SimpleOpt of  string * access * expr
+
 
   
                                                                    
