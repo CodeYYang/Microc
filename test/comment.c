@@ -18,10 +18,10 @@ void main(int n) {
   // 此时解释器，栈式虚拟机，x86程序表现各不相同，可以思考原因
   (*  这是一个新的注释功能 *)
   | 这也是一个新的注释功能
-  a = 5;
-  print a;
+  a = 5.4;
+  printf("%f",a);
   while (n > 0) {
-    print n;
+  printf("%d",n);
     n = n - 1;
   }
   println;

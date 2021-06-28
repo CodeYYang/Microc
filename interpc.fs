@@ -18,6 +18,7 @@ let _ =
             Array.splitAt 2 args
             |> snd
             |> (Array.map int)
+            |> (Array.map INT)
             |> Array.toList
 
         printf "interpreting %s ...inputargs:%A\n" source inputargs

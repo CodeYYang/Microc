@@ -1,6 +1,6 @@
 void main()
 {
-    print("%x",21);
+    printf("%x",21);
     println;
-    print("%o",21);
+    printf("%o",21);
 }

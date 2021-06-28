@@ -3,5 +3,8 @@ void main()
 {
     float a ;
     a = 5.4;
-    print("%f",a);
+    printf("%f",a);
+    char b;
+    b = "B";
+    printf("%c",b);
 }

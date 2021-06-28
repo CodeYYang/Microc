@@ -13,6 +13,7 @@ type token =
   | ASSIGN
   | AMP
   | COLON
+  | QUES
   | NOT
   | SEQOR
   | SEQAND
@@ -27,8 +28,6 @@ type token =
   | TIMES
   | DIV
   | MOD
-  | SELFPLUS
-  | SELFMINUS
   | CHAR
   | ELSE
   | IF
@@ -39,19 +38,21 @@ type token =
   | RETURN
   | VOID
   | WHILE
-  | STRING
+  | DO
+  | DOWHILE
   | FOR
-  | FLOAT
+  | BOOL
   | SWITCH
   | CASE
-  | DOWHILE
-  | DO
-  | CSTFLOAT of (float32)
+  | FLOAT
+  | PRINTF
+  | STRING
   | CSTCHAR of (char)
+  | CSTFLOAT of (float)
+  | CSTBOOL of (bool)
   | CSTSTRING of (string)
   | NAME of (string)
   | CSTINT of (int)
-  | CSTBOOL of (int)
 type tokenId = 
     | TOKEN_EOF
     | TOKEN_LPAR
@@ -65,6 +66,7 @@ type tokenId =
     | TOKEN_ASSIGN
     | TOKEN_AMP
     | TOKEN_COLON
+    | TOKEN_QUES
     | TOKEN_NOT
     | TOKEN_SEQOR
     | TOKEN_SEQAND
@@ -79,8 +81,6 @@ type tokenId =
     | TOKEN_TIMES
     | TOKEN_DIV
     | TOKEN_MOD
-    | TOKEN_SELFPLUS
-    | TOKEN_SELFMINUS
     | TOKEN_CHAR
     | TOKEN_ELSE
     | TOKEN_IF
@@ -91,19 +91,21 @@ type tokenId =
     | TOKEN_RETURN
     | TOKEN_VOID
     | TOKEN_WHILE
-    | TOKEN_STRING
+    | TOKEN_DO
+    | TOKEN_DOWHILE
     | TOKEN_FOR
-    | TOKEN_FLOAT
+    | TOKEN_BOOL
     | TOKEN_SWITCH
     | TOKEN_CASE
-    | TOKEN_DOWHILE
-    | TOKEN_DO
-    | TOKEN_CSTFLOAT
+    | TOKEN_FLOAT
+    | TOKEN_PRINTF
+    | TOKEN_STRING
     | TOKEN_CSTCHAR
+    | TOKEN_CSTFLOAT
+    | TOKEN_CSTBOOL
     | TOKEN_CSTSTRING
     | TOKEN_NAME
     | TOKEN_CSTINT
-    | TOKEN_CSTBOOL
     | TOKEN_end_of_input
     | TOKEN_error
 type nonTerminalId = 
@@ -112,7 +114,6 @@ type nonTerminalId =
     | NONTERM_Topdecs
     | NONTERM_Topdec
     | NONTERM_Vardec
-    | NONTERM_VardecAndAssignment
     | NONTERM_Vardesc
     | NONTERM_Fundec
     | NONTERM_Paramdecs
@@ -130,9 +131,10 @@ type nonTerminalId =
     | NONTERM_Exprs
     | NONTERM_Exprs1
     | NONTERM_Const
-    | NONTERM_ConstFloat
-    | NONTERM_ConstString
-    | NONTERM_ConstChar
+    | NONTERM_Bool
+    | NONTERM_String
+    | NONTERM_Float
+    | NONTERM_Char
     | NONTERM_Type
 /// This function maps tokens to integer indexes
 val tagOfToken: token -> int

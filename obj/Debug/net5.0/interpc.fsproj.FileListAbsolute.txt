@@ -54,6 +54,9 @@ C:\Users\cs\Desktop\编译作业\sigcc-plzoofs-master\sigcc-plzoofs-master\plzoo
 C:\Users\cs\Desktop\编译作业\sigcc-plzoofs-master\sigcc-plzoofs-master\plzoofs\microc\bin\Debug\net5.0\zh-Hant\FSharp.Core.resources.dll
 C:\Users\cs\Desktop\编译作业\sigcc-plzoofs-master\sigcc-plzoofs-master\plzoofs\microc\obj\Debug\net5.0\interpc.fsproj.CopyComplete
 C:\Users\cs\Desktop\编译作业\sigcc-plzoofs-master\sigcc-plzoofs-master\plzoofs\microc\obj\Debug\net5.0\interpc.genruntimeconfig.cache
+C:\Users\15929\Desktop\编译原理\Microc\obj\Debug\net5.0\interpc.fsprojAssemblyReference.cache
+C:\Users\15929\Desktop\编译原理\Microc\obj\Debug\net5.0\interpc.AssemblyInfoInputs.cache
+C:\Users\15929\Desktop\编译原理\Microc\obj\Debug\net5.0\interpc.AssemblyInfo.fs
 C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\interpc.exe
 C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\interpc.deps.json
 C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\interpc.runtimeconfig.json
@@ -75,9 +78,6 @@ C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\ru\FSharp.Core.resou
 C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\tr\FSharp.Core.resources.dll
 C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\zh-Hans\FSharp.Core.resources.dll
 C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\zh-Hant\FSharp.Core.resources.dll
-C:\Users\15929\Desktop\编译原理\Microc\obj\Debug\net5.0\interpc.fsprojAssemblyReference.cache
-C:\Users\15929\Desktop\编译原理\Microc\obj\Debug\net5.0\interpc.AssemblyInfoInputs.cache
-C:\Users\15929\Desktop\编译原理\Microc\obj\Debug\net5.0\interpc.AssemblyInfo.fs
 C:\Users\15929\Desktop\编译原理\Microc\obj\Debug\net5.0\interpc.fsproj.CopyComplete
 C:\Users\15929\Desktop\编译原理\Microc\obj\Debug\net5.0\interpc.dll
 C:\Users\15929\Desktop\编译原理\Microc\obj\Debug\net5.0\interpc.pdb
