@@ -6,10 +6,6 @@
 *)
 open Absyn
 
-let first  (a, _, _) = a
-let second (_, b, _) = b
-let third  (_, _, c) = c
-
 // Vardesc 返回的是一个 元组 (g,s)
 // g是类型构造函数，s是变量名
 // compose1 函数 取出 类型构造子 g，用类型复合机制构造类型。
@@ -18,29 +14,29 @@ let compose1 f (g, s) = ((fun x -> g(f(x))), s)
 let nl = CstI 10 //  \n 的 ASCII 码
 %}
 
-%token <int> CSTINT  CSTBOOL// <int> 是词元的语义值类型
+%token <int> CSTINT  // <int> 是词元的语义值类型
 %token <string> CSTSTRING NAME
+%token <bool> CSTBOOL
+%token <float> CSTFLOAT
 %token <char> CSTCHAR
 
-%token <float32> CSTFLOAT
-
-%token CHAR ELSE IF INT FLOAT NULL PRINT PRINTLN RETURN VOID WHILE STRING FOR DO DOWHILE SWITCH CASE 
-%token PLUS MINUS TIMES DIV MOD SELFPLUS SELFMINUS SELFTIMES SELFDIV SELFMOD ADDONE MINUSONE
+%token CHAR ELSE IF INT NULL PRINT PRINTLN RETURN VOID WHILE DO DOWHILE  FOR BOOL SWITCH CASE  FLOAT PRINTF STRING
+%token PLUS MINUS TIMES DIV MOD DOUBLEPLUS DOUBLEMINUS PLUSASSIGN MINUSASSIGN TIMESASSIGN DIVASSIGN MODASSIGN
 %token EQ NE GT LT GE LE
 %token NOT SEQOR SEQAND
 %token LPAR RPAR LBRACE RBRACE LBRACK RBRACK SEMI COMMA ASSIGN AMP COLON QUES
 %token EOF
+
 %right ASSIGN             /* lowest precedence */  // 最下面的优先级最高
-%nonassoc PRINT
+%nonassoc PRINT PRINTF
+%right COLON QUES PLUSASSIGN MINUSASSIGN TIMESASSIGN DIVASSIGN MODASSIGN
 %left SEQOR
 %left SEQAND
 %left EQ NE 
 %nonassoc GT LT GE LE
 %left PLUS MINUS
-%left TIMES DIV MOD
-%left SELFPLUS SELFMINUS SELFTIMES SELFDIV SELFMOD ADDONE MINUSONE
-%right QUES COLON
-%nonassoc NOT AMP 
+%left TIMES DIV MOD 
+%nonassoc NOT AMP DOUBLEPLUS DOUBLEMINUS 
 %nonassoc LBRACK          /* highest precedence  */
 
 %start Main            // 语法开始符号
@@ -61,8 +57,6 @@ Topdecs:
 Topdec: 
     Vardec SEMI                         { Vardec (fst $1, snd $1) }
   | Fundec                              { $1 }
-  | VardecAndAssignment SEMI            { VardecAndAssignment (first $1, second $1 ,third $1)  }
-
 ;
 
 /*                                               
@@ -81,12 +75,6 @@ int (*iap)[10];  // pointer to array of 10 int    (TypP (TypA (TypI, Some 10))
 
 Vardec:
     Type Vardesc                        { ((fst $2) $1, snd $2) }
-;
-
-
-// 定义类似 int i = 1 ;
-VardecAndAssignment:
-    Type Vardesc ASSIGN Expr    { ((fst $2) $1, snd $2 , $4) }
 ;
 
 /*
@@ -138,14 +126,12 @@ StmtOrDecSeq:
     /* empty */                         { [] }
   | Stmt StmtOrDecSeq                   { Stmt $1 :: $2 }
   | Vardec SEMI StmtOrDecSeq            { Dec (fst $1, snd $1) :: $3 }
-  | VardecAndAssignment SEMI StmtOrDecSeq  { DecAndAssign (first $1, second $1, third $1) :: $3 }
-
+  | Vardec ASSIGN Expr SEMI StmtOrDecSeq{ DecAndAssign (fst $1, snd $1, $3) :: $5 }
 ;
 
 Stmt: 
     StmtM                               { $1 }
   | StmtU                               { $1 }
-  | FOR LPAR Expr SEMI Expr SEMI Expr RPAR StmtM { For($3,$5,$7,$9)  }
 ;
 
 StmtM:  /* No unbalanced if-else */
@@ -156,8 +142,8 @@ StmtM:  /* No unbalanced if-else */
   | IF LPAR Expr RPAR StmtM ELSE StmtM  { If($3, $5, $7)       }
   | WHILE LPAR Expr RPAR StmtM          { While($3, $5)        }
   | DO StmtM WHILE LPAR Expr RPAR SEMI  { DoWhile($2, $5)      }
+  | FOR LPAR Expr SEMI Expr SEMI Expr RPAR StmtM { For($3, $5, $7, $9) }
   | SWITCH LPAR Expr RPAR LBRACE ExecCase RBRACE { Switch($3, $6) }
-;
 
 ExecCase:
     CASE AtExprNotAccess COLON StmtM               { [Case($2,$4)] }
@@ -181,22 +167,10 @@ ExprNotAccess:
   | NAME LPAR Exprs RPAR                { Call($1, $3)        }  
   | NOT Expr                            { Prim1("!", $2)      }
   | PRINT Expr                          { Prim1("printi", $2) }
-  | PRINT LPAR CSTSTRING COMMA Expr RPAR{ Print($3 , $5)      }
-  | PRINTLN                             { Prim1("prin tc", nl)}
+  | PRINTF LPAR CSTSTRING COMMA Expr RPAR{ Printf($3 , $5)      }
+  | PRINTLN                             { Prim1("printc", nl)}
   | Expr PLUS  Expr                     { Prim2("+",  $1, $3) }
   | Expr MINUS Expr                     { Prim2("-",  $1, $3) }
-
-  | Access ADDONE                       { SimpleOpt("I++", $1, CstI 1 )   }
-  | Access MINUSONE                     { SimpleOpt("I--", $1, CstI 1 )   }
-  | ADDONE Access                       { SimpleOpt("++I", $2, CstI 1 )   }
-  | MINUSONE Access                     { SimpleOpt("--I", $2, CstI 1 )   }  
-  | Access SELFTIMES Expr               { SimpleOpt("*=", $1, $3 ) }
-  | Access SELFDIV Expr                 { SimpleOpt("/=", $1, $3 ) }
-  | Access SELFPLUS Expr                { SimpleOpt("+=", $1, $3 ) }
-  | Access SELFMINUS Expr               { SimpleOpt("-=", $1, $3 ) }
-  | Access SELFMOD Expr                 { SimpleOpt("%=", $1, $3 ) }
-
-
   | Expr TIMES Expr                     { Prim2("*",  $1, $3) }
   | Expr DIV   Expr                     { Prim2("/",  $1, $3) }
   | Expr MOD   Expr                     { Prim2("%",  $1, $3) }
@@ -208,9 +182,16 @@ ExprNotAccess:
   | Expr LE    Expr                     { Prim2("<=", $1, $3) }
   | Expr SEQAND Expr                    { Andalso($1, $3)     }
   | Expr SEQOR  Expr                    { Orelse($1, $3)      }
-
   | Expr QUES Expr COLON Expr           { Prim3($1, $3, $5)   }
-
+  | Access PLUSASSIGN Expr              { PlusAssign($1, $3)  }
+  | Access MINUSASSIGN Expr             { MinusAssign($1, $3) }
+  | Access TIMESASSIGN Expr             { TimesAssign($1, $3) }
+  | Access DOUBLEPLUS                   { RearPlus($1,"++")    }
+  | DOUBLEPLUS Access                   { PrePlus("++",$2)   }
+  | Access DOUBLEMINUS                  { RearMinus($1,"--")    }
+  | DOUBLEMINUS Access                  { PreMinus("--",$2)   }
+  | Access DIVASSIGN Expr               { DivAssign($1, $3)   }
+  | Access MODASSIGN Expr               { ModAssign($1, $3)   }
 ;
 
 AtExprNotAccess:
@@ -219,10 +200,11 @@ AtExprNotAccess:
     // AMP Access  , &x
     // (3)   
     Const                               { CstI $1             }
+  | Bool                                { CstB $1             }
+  | Float                               { CstF $1             }
+  | String                              { CstS $1             }
+  | Char                                { CstC ($1)          }    
   | LPAR ExprNotAccess RPAR             { $2                  } 
-  | ConstChar                           { ConstChar($1)       }
-  | ConstString                         { ConstString($1)     }
-  | ConstFloat                          { ConstFloat($1)      }
   | AMP Access                          { Addr $2             } // 取地址
 ;
 
@@ -246,26 +228,28 @@ Exprs1:
 
 Const:
     CSTINT                              { $1       }
-  | CSTBOOL                             { $1       }
   | MINUS CSTINT                        { - $2     }
   | NULL                                { -1       }
 ;
 
-ConstFloat:
+Bool:
+    CSTBOOL                             { $1       }    
+;
+
+String:
+    CSTSTRING                           { $1       }   
+
+Float:
     CSTFLOAT                            { $1       }
   | MINUS CSTFLOAT                      { - $2     }
-
-ConstString:
-  CSTSTRING                             { $1       }
 ;
-
-ConstChar:
-  CSTCHAR                               { $1       }
+Char:
+    CSTCHAR                             { $1       }
 ;
-
 Type:
     INT                                 { TypI     }
   | CHAR                                { TypC     }
+  | BOOL                                { TypB     } 
+  | FLOAT                               { TypF     }
   | STRING                              { TypS     }
-  | FLOAT                               { TypeFloat    }
 ;

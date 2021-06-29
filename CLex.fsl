@@ -17,28 +17,27 @@ let lexemeAsString lexbuf =
 // keyword 处理关键字与标识符的辅助函数
 let keyword s =   
     match s with
+    | "bool"    -> BOOL
     | "char"    -> CHAR    // 返回对应的Token ,Token 定义于 CPar.fsl 文件中
     | "else"    -> ELSE
-    | "false"   -> CSTBOOL 0
+    | "false"   -> CSTBOOL false
     | "if"      -> IF
     | "int"     -> INT
+    | "float"   -> FLOAT
     | "null"    -> NULL
     | "print"   -> PRINT
+    | "printf"  -> PRINTF
     | "println" -> PRINTLN
     | "return"  -> RETURN
-    | "true"    -> CSTBOOL 1
+    | "true"    -> CSTBOOL true
     | "void"    -> VOID 
-    | "String"  -> STRING
-    | "while"   -> WHILE  
-    | "for"     -> FOR  
-    // | "bool"    -> BOOL
+    | "while"   -> WHILE
     | "do"      -> DO
-    | "dowhile"   -> DOWHILE
-
+    | "dowhile" -> DOWHILE
+    | "for"     -> FOR
     | "switch"  -> SWITCH
     | "case"    -> CASE
-
-    | "float"   -> FLOAT
+    | "string"  -> STRING
     | _         -> NAME s   // 缺省情况，是标识符的名字，如 函数名，变量名等
                             // 当所有的关键字没有匹配成功时，则当成标识符
 // 字符串转义符处理函数
@@ -68,10 +67,11 @@ rule Token = parse          // 每个 规则rule 会生成为一个函数，函�
                             //  System.Int32.Parse 将 字符串转换为 int 类型
                             // 在 CPar 中  词元CSTINT 的语义值的类型是int  %token <int> CSTINT
                             //  CSTINT 需要一个整数作为参数
+  
+  | ['0'-'9']+'.'['0'-'9']+      { CSTFLOAT (float (lexemeAsString lexbuf)) }
 
-  | ['0'-'9']+'.'['0'-'9']+ 
-                    { CSTFLOAT (System.Single.Parse (lexemeAsString lexbuf)) }   
-
+  | ['\'']['a'-'z''A'-'Z''0'-'9']['\'']            
+                    { try let single = lexemeAsString lexbuf in CSTCHAR (System.Char.Parse(single.Substring(1, 1))) with ex -> failwith "Char literal error." }
   | ['a'-'z''A'-'Z']['a'-'z''A'-'Z''0'-'9']*
                     { keyword (lexemeAsString lexbuf) } //标识符处理
                                                        //先查是否是关键字，是则返回对应关键字的Token
@@ -80,15 +80,6 @@ rule Token = parse          // 每个 规则rule 会生成为一个函数，函�
   | '-'             { MINUS } 
   | '*'             { TIMES } 
   | '/'             { DIV } 
-  
-  | "++"            { ADDONE }
-  | "--"            { MINUSONE }
-  | "+="            { SELFPLUS } 
-  | "-="            { SELFMINUS } 
-  | "*="            { SELFTIMES }
-  | "/="            { SELFDIV }
-  | "%="            { SELFMOD }
-
   | '%'             { MOD }                     
   | '='             { ASSIGN } 
   | "=="            { EQ } 
@@ -97,6 +88,13 @@ rule Token = parse          // 每个 规则rule 会生成为一个函数，函�
   | '<'             { LT }
   | ">="            { GE }
   | "<="            { LE }
+  | "+="            { PLUSASSIGN }
+  | "-="            { MINUSASSIGN }
+  | "*="            { TIMESASSIGN }
+  | "/="            { DIVASSIGN }
+  | "%="            { MODASSIGN }
+  | "++"            { DOUBLEPLUS }
+  | "--"            { DOUBLEMINUS }
   | "||"            { SEQOR }                     
   | "&&"            { SEQAND }                     
   | "&"             { AMP }                     
@@ -109,22 +107,24 @@ rule Token = parse          // 每个 规则rule 会生成为一个函数，函�
   | ']'             { RBRACK }
   | ';'             { SEMI }
   | ':'             { COLON }
-  | '?'             { QUES }
   | ','             { COMMA }
+  | '?'             { QUES}
   | "//"            { EndLineComment lexbuf; Token lexbuf }  //单行注释处理规则，调用响应处理函数
                                                              //参数是 lexbuf
                                                              // 处理完后 lexbuf 内容已经更新，注释部分过滤
                                                              //调用 Token 规则函数继续注释部分后面的处理
+  | "|"             { EndLineComment lexbuf; Token lexbuf }
   | "/*"            { Comment lexbuf; Token lexbuf }   // 多行注释，调用 Comment规则
+  | "(*"            { Comment lexbuf; Token lexbuf }   // 多行注释，调用 Comment规则
   | '"'             { CSTSTRING (String [] lexbuf) }   // 调用字符串处理规则
-  | ['\'']['a'-'z''A'-'Z''0'-'9']['\'']            
-                    { try let single = lexemeAsString lexbuf in CSTCHAR (System.Char.Parse(single.Substring(1, 1))) with ex -> failwith "Char literal error." }
   | eof             { EOF }
   | _               { failwith "Lexer error: illegal symbol" }
 
 and Comment = parse
    | "/*"           { Comment lexbuf; Comment lexbuf }  // 注释的嵌套处理
    | "*/"           { () }                           // 注释处理结束
+   | "(*"           { Comment lexbuf; Comment lexbuf }  // 注释的嵌套处理
+   | "*)"           { () }                           // 注释处理结束
    | '\n'           { lexbuf.EndPos <- lexbuf.EndPos.NextLine; Comment lexbuf } //注释跨行处理
    | (eof | '\026') { failwith "Lexer error: unterminated comment" }  // 多行注释未封闭
    | _              { Comment lexbuf }  // 其他任意情况都继续处理后续字符

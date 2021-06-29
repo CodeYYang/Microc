@@ -1,9 +1,9 @@
-void main() {
-    int x;
-    x=1;
-    switch( x ){
-        case 1 : print 1;
-        case 2 : print 2;
-        case 3 : print 3;
+int main(){
+    int x=10;
+    string s="x=2!";
+    switch (x-8){
+        case 1: printf("%f",1.1);
+        case 2: printf("%s",s);
+        case 3: printf("%d",3);
     }
 }

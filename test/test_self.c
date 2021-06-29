@@ -1,14 +1,12 @@
 int main(){
-    int x1=20;
-    x1++;
-    print("%d",x1);
-    int x2=30;
-    x2--;
-    print("%d",x2);
-    int x4=100;
-    x4+=x1;
-    print("%d",x4);
-    x4-=x2;
-    print("%d",x4);
-
+    int x=10;
+    printf("%d",x++);
+    printf("%d",++x);
+    printf("%d",x--);
+    printf("%d",--x);
+    printf("%d",x+=5);
+    printf("%d",x-=10);
+    int x2=100;
+    printf("%d",x2/=25);
+    printf("%d",x2*=10);
 }

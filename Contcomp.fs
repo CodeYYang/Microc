@@ -106,10 +106,6 @@ let rec addCST i C =
 
 
 
-//添加float
-let rec addCSTF i C =
-    match (i, C) with
-    | _                     -> (CSTF (System.BitConverter.ToInt32(System.BitConverter.GetBytes(float32(i)), 0))) :: C
 
 let rec addCSTC i C =
     match (i, C) with
@@ -138,7 +134,6 @@ let rec lookup env x =
 type Var = 
     | Glovar of int                   (* absolute address in stack           *)
     | Locvar of int                   (* address relative to b ottom of frame *)
-    | StructMemberLoc of int
 
 
 
@@ -221,6 +216,49 @@ let rec cStmt stmt (varEnv : VarEnv) (funEnv : FunEnv) (C : instr list) : instr 
       let (jumptest, C1) = 
            makeJump (cExpr e varEnv funEnv (IFNZRO labbegin :: C))
       addJump jumptest (Label labbegin :: cStmt body varEnv funEnv C1)
+    | DoWhile (body, e) ->
+        let labbegin = newLabel () //出口位置
+
+        let C1 =
+            cExpr e varEnv funEnv (IFNZRO labbegin :: C)
+
+        Label labbegin :: cStmt body varEnv funEnv C1
+    | For (e1, e2, e3, body) ->
+        let labbegin = newLabel ()
+
+        let (jumptest, C1) =
+            makeJump (cExpr e2 varEnv funEnv (IFNZRO labbegin :: C)) //根据for循环第二个表达式判断是否跳转
+
+        let C2 = cExpr e3 varEnv funEnv (addINCSP -1 C1) //执行for循环第三个表达式
+
+        let C3 =
+            Label labbegin :: cStmt body varEnv funEnv C2
+
+        let C4 = addJump jumptest C3 //根据当前情况跳转
+
+        cExpr e1 varEnv funEnv (addINCSP -1 C4) //汇编指令拼接
+
+    | Switch (e, cases) ->
+        let (labend, C1) = addLabel C //确定出口
+        let lablist = labend :: []
+
+        let rec everycase c =
+            match c with
+            | Case (cond, body) :: tr ->
+                let (labnextbody, labnext, C2) = everycase tr //获取后续case的指令
+
+                let (label, C3) =
+                    addLabel (cStmt body varEnv funEnv (addGOTO labend C2)) //出口位置与指令拼接
+
+                let (label2, C4) =
+                    addLabel (cExpr (Prim2("==", e, cond)) varEnv funEnv (IFZERO labnext :: C3))
+
+                (label, label2, C4)
+            | [] -> (labend, labend, C1)
+
+        let (label, label2, C2) = everycase cases
+        C2
+    | Case (cond, body) -> C
     | Expr e -> 
       cExpr e varEnv funEnv (addINCSP -1 C) 
     | Block stmts -> 
@@ -276,17 +314,15 @@ and cExpr (e : expr) (varEnv : VarEnv) (funEnv : FunEnv) (C : instr list) : inst
     | Access acc     -> cAccess acc varEnv funEnv (LDI :: C)
     | Assign(acc, e) -> cAccess acc varEnv funEnv (cExpr e varEnv funEnv (STI :: C))
     | CstI i         -> addCST i C
-    | ConstChar i    -> addCST (int i) C   //字符
-    | ConstString s     -> addCST (int s) C     //字符串
-    | ConstFloat i      -> addCSTF i C     //浮点数
+    | CstC i    -> addCST (int i) C   //字符
+    | CstS s     -> addCST (int s) C     //字符串
     | Addr acc       -> cAccess acc varEnv funEnv C
-    | Print(ope,e1)  -> // print("%d",i)
+    | Printf(ope, e1) ->
         cExpr e1 varEnv funEnv
-               (match ope with
-                | "%d"  -> PRINTI :: C
-                | "%c"  -> PRINTC :: C
-                | "%f"  -> PRINTF :: C
-                | _        -> failwith "unknown primitive 1")
+            (match ope with
+             | "%d"      -> PRINTI :: C
+             | "%c"      -> PRINTC :: C
+             | _        -> failwith "unknown primitive 1")
     | Prim1(ope, e1) ->
         cExpr e1 varEnv funEnv
             (match ope with
@@ -316,41 +352,39 @@ and cExpr (e : expr) (varEnv : VarEnv) (funEnv : FunEnv) (C : instr list) : inst
       cExpr e1 varEnv funEnv (IFZERO labelse 
       :: cExpr e2 varEnv funEnv (addJump jumpend C2))
    
-    | SimpleOpt(ope,acc,e)->             
-        cExpr e varEnv funEnv  
-            (match ope with
-            | "+=" -> 
-                let ass = Assign (acc,Prim2("+",Access acc, e))
-                cExpr ass varEnv funEnv (addINCSP -1 C)
-            | "-=" ->
-                let ass = Assign (acc,Prim2("-",Access acc, e))
-                cExpr ass varEnv funEnv (addINCSP -1 C)
-            | "++I" -> 
-                let ass = Assign (acc,Prim2("+",Access acc, e))
-                let C1 = cExpr ass varEnv funEnv C
-                CSTI 1 :: ADD :: (addINCSP -1 C1)
-            | "I++" -> 
-                let ass = Assign (acc,Prim2("+",Access acc, e))
-                let C1 = cExpr ass varEnv funEnv C
-                CSTI 1 :: ADD :: (addINCSP -1 C1)
-            | "--I" ->
-                let ass = Assign (acc,Prim2("-",Access acc, e))
-                let C1 = cExpr ass varEnv funEnv C
-                CSTI 1 :: SUB :: (addINCSP -1 C1)  
-            | "I--" ->
-                let ass = Assign (acc,Prim2("-",Access acc, e))
-                let C1 = cExpr ass varEnv funEnv C
-                CSTI 1 :: SUB :: (addINCSP -1 C1)      
-            | "*=" -> 
-                let ass = Assign (acc,Prim2("*",Access acc, e))
-                cExpr ass varEnv funEnv (addINCSP -1 C)
-            | "/=" ->
-                let ass = Assign (acc,Prim2("/",Access acc, e))
-                cExpr ass varEnv funEnv (addINCSP -1 C)
-            | "%=" ->
-                let ass = Assign (acc,Prim2("%",Access acc, e))
-                cExpr ass varEnv funEnv (addINCSP -1 C)
-            | _         -> failwith "Error: unknown unary operator")
+    | PrePlus (ope, acc) ->
+        let e = Prim2("+", Access(acc), CstI 1)
+        cAccess acc varEnv funEnv (cExpr e varEnv funEnv (STI :: C))
+    | RearPlus (acc, ope) ->
+        let e = Prim2("+", Access(acc), CstI 1)
+        cAccess acc varEnv funEnv (cExpr e varEnv funEnv (STI :: C))
+    | PreMinus (ope, acc) ->
+        let e = Prim2("-", Access(acc), CstI 1)
+        cAccess acc varEnv funEnv (cExpr e varEnv funEnv (STI :: C))
+    | RearMinus (acc, ope) ->
+        let e = Prim2("-", Access(acc), CstI 1)
+        cAccess acc varEnv funEnv (cExpr e varEnv funEnv (STI :: C))
+
+    | PlusAssign (acc, e) ->
+        let e = Prim2("+", Access(acc), e)
+        cAccess acc varEnv funEnv (cExpr e varEnv funEnv (STI :: C))
+
+    | MinusAssign (acc, e) ->
+        let e = Prim2("-", Access(acc), e)
+        cAccess acc varEnv funEnv (cExpr e varEnv funEnv (STI :: C))
+
+
+    | TimesAssign (acc, e) ->
+        let e = Prim2("*", Access(acc), e)
+        cAccess acc varEnv funEnv (cExpr e varEnv funEnv (STI :: C))
+
+    | DivAssign (acc, e) ->
+        let e = Prim2("/", Access(acc), e)
+        cAccess acc varEnv funEnv (cExpr e varEnv funEnv (STI :: C))
+
+    | ModAssign (acc, e) ->
+        let e = Prim2("%", Access(acc), e)
+        cAccess acc varEnv funEnv (cExpr e varEnv funEnv (STI :: C))
       
     | Andalso(e1, e2) ->
       match C with

@@ -1,6 +1,10 @@
 int main(){
-    int x=3;
-    int s;
-    x>5? s=100 : s=20;
-    print s;
+    int x=20;
+    int ans;
+    int ans2;
+    ans= x>30? 100:200;
+    x=40;
+    ans2= x>30? 100:200;
+    printf("%d",ans);
+    printf("%d",ans2);
 }

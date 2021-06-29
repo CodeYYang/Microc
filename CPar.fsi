@@ -28,36 +28,38 @@ type token =
   | TIMES
   | DIV
   | MOD
-  | SELFPLUS
-  | SELFMINUS
-  | SELFTIMES
-  | SELFDIV
-  | SELFMOD
-  | ADDONE
-  | MINUSONE
+  | DOUBLEPLUS
+  | DOUBLEMINUS
+  | PLUSASSIGN
+  | MINUSASSIGN
+  | TIMESASSIGN
+  | DIVASSIGN
+  | MODASSIGN
   | CHAR
   | ELSE
   | IF
   | INT
-  | FLOAT
   | NULL
   | PRINT
   | PRINTLN
   | RETURN
   | VOID
   | WHILE
-  | STRING
-  | FOR
   | DO
   | DOWHILE
+  | FOR
+  | BOOL
   | SWITCH
   | CASE
-  | CSTFLOAT of (float32)
+  | FLOAT
+  | PRINTF
+  | STRING
   | CSTCHAR of (char)
+  | CSTFLOAT of (float)
+  | CSTBOOL of (bool)
   | CSTSTRING of (string)
   | NAME of (string)
   | CSTINT of (int)
-  | CSTBOOL of (int)
 type tokenId = 
     | TOKEN_EOF
     | TOKEN_LPAR
@@ -86,36 +88,38 @@ type tokenId =
     | TOKEN_TIMES
     | TOKEN_DIV
     | TOKEN_MOD
-    | TOKEN_SELFPLUS
-    | TOKEN_SELFMINUS
-    | TOKEN_SELFTIMES
-    | TOKEN_SELFDIV
-    | TOKEN_SELFMOD
-    | TOKEN_ADDONE
-    | TOKEN_MINUSONE
+    | TOKEN_DOUBLEPLUS
+    | TOKEN_DOUBLEMINUS
+    | TOKEN_PLUSASSIGN
+    | TOKEN_MINUSASSIGN
+    | TOKEN_TIMESASSIGN
+    | TOKEN_DIVASSIGN
+    | TOKEN_MODASSIGN
     | TOKEN_CHAR
     | TOKEN_ELSE
     | TOKEN_IF
     | TOKEN_INT
-    | TOKEN_FLOAT
     | TOKEN_NULL
     | TOKEN_PRINT
     | TOKEN_PRINTLN
     | TOKEN_RETURN
     | TOKEN_VOID
     | TOKEN_WHILE
-    | TOKEN_STRING
-    | TOKEN_FOR
     | TOKEN_DO
     | TOKEN_DOWHILE
+    | TOKEN_FOR
+    | TOKEN_BOOL
     | TOKEN_SWITCH
     | TOKEN_CASE
-    | TOKEN_CSTFLOAT
+    | TOKEN_FLOAT
+    | TOKEN_PRINTF
+    | TOKEN_STRING
     | TOKEN_CSTCHAR
+    | TOKEN_CSTFLOAT
+    | TOKEN_CSTBOOL
     | TOKEN_CSTSTRING
     | TOKEN_NAME
     | TOKEN_CSTINT
-    | TOKEN_CSTBOOL
     | TOKEN_end_of_input
     | TOKEN_error
 type nonTerminalId = 
@@ -124,7 +128,6 @@ type nonTerminalId =
     | NONTERM_Topdecs
     | NONTERM_Topdec
     | NONTERM_Vardec
-    | NONTERM_VardecAndAssignment
     | NONTERM_Vardesc
     | NONTERM_Fundec
     | NONTERM_Paramdecs
@@ -142,9 +145,10 @@ type nonTerminalId =
     | NONTERM_Exprs
     | NONTERM_Exprs1
     | NONTERM_Const
-    | NONTERM_ConstFloat
-    | NONTERM_ConstString
-    | NONTERM_ConstChar
+    | NONTERM_Bool
+    | NONTERM_String
+    | NONTERM_Float
+    | NONTERM_Char
     | NONTERM_Type
 /// This function maps tokens to integer indexes
 val tagOfToken: token -> int

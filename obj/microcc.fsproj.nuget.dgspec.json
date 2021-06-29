@@ -1,26 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "D:\\gitcache\\microc - 副本\\microcc.fsproj": {}
+    "C:\\Users\\15929\\Desktop\\编译原理\\编译原理实验报告\\Microc-wyk\\microcc.fsproj": {}
   },
   "projects": {
-    "D:\\gitcache\\microc - 副本\\microcc.fsproj": {
+    "C:\\Users\\15929\\Desktop\\编译原理\\编译原理实验报告\\Microc-wyk\\microcc.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\gitcache\\microc - 副本\\microcc.fsproj",
+        "projectUniqueName": "C:\\Users\\15929\\Desktop\\编译原理\\编译原理实验报告\\Microc-wyk\\microcc.fsproj",
         "projectName": "microcc",
-        "projectPath": "D:\\gitcache\\microc - 副本\\microcc.fsproj",
-        "packagesPath": "C:\\Users\\cs\\.nuget\\packages\\",
-        "outputPath": "D:\\gitcache\\microc - 副本\\obj\\",
+        "projectPath": "C:\\Users\\15929\\Desktop\\编译原理\\编译原理实验报告\\Microc-wyk\\microcc.fsproj",
+        "packagesPath": "C:\\Users\\15929\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\15929\\Desktop\\编译原理\\编译原理实验报告\\Microc-wyk\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\cs\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\15929\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
-          "https://api.nuget.org/v3/index.json": {}
+          "https://nuget.cdn.azure.cn/v3/index.json": {}
         },
         "frameworks": {
           "net5.0": {

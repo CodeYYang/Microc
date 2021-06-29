@@ -1,8 +1,6 @@
 int main(){
-  char c;
-  c= 'x';
-  print("%c",c);
-  int i;
-  i=2;
-  print("%d",i);
+  char C='x';
+  printf("%c",C);
+  int i=2;
+  printf("%d",i);
 }

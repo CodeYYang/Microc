@@ -45,7 +45,6 @@ type instr =
   | RET of int                         (* pop m and return to s[sp]       *)
   | PRINTI                             (* print s[sp] as integer          *)
   | PRINTC                             (* print s[sp] as character        *)
-  | PRINTF
   | LDARGS of int                             (* load command line args on stack *)
   | STOP                               (* halt the abstract machine       *)
 
@@ -184,8 +183,6 @@ let CODECSTC    = 27;
 let CODECSTS    = 28;
 
 
-[<Literal>]
-let CODEPRINTF  = 29;
 
 (* Bytecode emission, first pass: build environment that maps 
    each label to an integer address in the bytecode.
@@ -225,7 +222,6 @@ let makelabenv (addr, labenv) instr =
     | RET m          -> (addr+2, labenv)
     | PRINTI         -> (addr+1, labenv)
     | PRINTC         -> (addr+1, labenv)
-    | PRINTF         -> (addr+1, labenv)
     | LDARGS  m       -> (addr+1, labenv)
     | STOP           -> (addr+1, labenv)
 
@@ -267,7 +263,6 @@ let rec emitints getlab instr ints =
     | RET m          -> CODERET    :: m :: ints
     | PRINTI         -> CODEPRINTI :: ints
     | PRINTC         -> CODEPRINTC :: ints
-    | PRINTF         -> CODEPRINTF :: ints
     | LDARGS m       -> CODELDARGS :: ints
     | STOP           -> CODESTOP   :: ints
 
@@ -325,7 +320,6 @@ let rec decomp ints : instr list =
     | CODERET    :: m :: ints_rest                    ->   RET m         :: decomp ints_rest
     | CODEPRINTI :: ints_rest                         ->   PRINTI        :: decomp ints_rest
     | CODEPRINTC :: ints_rest                         ->   PRINTC        :: decomp ints_rest
-    | CODEPRINTF :: ints_rest                       ->   PRINTF         :: decomp ints_rest
     | CODELDARGS :: ints_rest                         ->   LDARGS 0       :: decomp ints_rest
     | CODESTOP   :: ints_rest                         ->   STOP             :: decomp ints_rest
     | CODECSTI   :: i :: ints_rest                    ->   CSTI i         :: decomp ints_rest       

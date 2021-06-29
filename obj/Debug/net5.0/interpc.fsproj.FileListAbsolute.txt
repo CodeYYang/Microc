@@ -54,31 +54,59 @@ C:\Users\cs\Desktop\编译作业\sigcc-plzoofs-master\sigcc-plzoofs-master\plzoo
 C:\Users\cs\Desktop\编译作业\sigcc-plzoofs-master\sigcc-plzoofs-master\plzoofs\microc\bin\Debug\net5.0\zh-Hant\FSharp.Core.resources.dll
 C:\Users\cs\Desktop\编译作业\sigcc-plzoofs-master\sigcc-plzoofs-master\plzoofs\microc\obj\Debug\net5.0\interpc.fsproj.CopyComplete
 C:\Users\cs\Desktop\编译作业\sigcc-plzoofs-master\sigcc-plzoofs-master\plzoofs\microc\obj\Debug\net5.0\interpc.genruntimeconfig.cache
-D:\gitcache\microc\obj\Debug\net5.0\interpc.fsprojAssemblyReference.cache
-D:\gitcache\microc\obj\Debug\net5.0\interpc.AssemblyInfoInputs.cache
-D:\gitcache\microc\obj\Debug\net5.0\interpc.AssemblyInfo.fs
-D:\gitcache\microc\obj\Debug\net5.0\interpc.dll
-D:\gitcache\microc\obj\Debug\net5.0\interpc.pdb
-D:\gitcache\microc\bin\Debug\net5.0\interpc.exe
-D:\gitcache\microc\bin\Debug\net5.0\interpc.deps.json
-D:\gitcache\microc\bin\Debug\net5.0\interpc.runtimeconfig.json
-D:\gitcache\microc\bin\Debug\net5.0\interpc.runtimeconfig.dev.json
-D:\gitcache\microc\bin\Debug\net5.0\interpc.dll
-D:\gitcache\microc\bin\Debug\net5.0\interpc.pdb
-D:\gitcache\microc\bin\Debug\net5.0\FSharp.Core.dll
-D:\gitcache\microc\bin\Debug\net5.0\FsLexYacc.Runtime.dll
-D:\gitcache\microc\bin\Debug\net5.0\cs\FSharp.Core.resources.dll
-D:\gitcache\microc\bin\Debug\net5.0\de\FSharp.Core.resources.dll
-D:\gitcache\microc\bin\Debug\net5.0\es\FSharp.Core.resources.dll
-D:\gitcache\microc\bin\Debug\net5.0\fr\FSharp.Core.resources.dll
-D:\gitcache\microc\bin\Debug\net5.0\it\FSharp.Core.resources.dll
-D:\gitcache\microc\bin\Debug\net5.0\ja\FSharp.Core.resources.dll
-D:\gitcache\microc\bin\Debug\net5.0\ko\FSharp.Core.resources.dll
-D:\gitcache\microc\bin\Debug\net5.0\pl\FSharp.Core.resources.dll
-D:\gitcache\microc\bin\Debug\net5.0\pt-BR\FSharp.Core.resources.dll
-D:\gitcache\microc\bin\Debug\net5.0\ru\FSharp.Core.resources.dll
-D:\gitcache\microc\bin\Debug\net5.0\tr\FSharp.Core.resources.dll
-D:\gitcache\microc\bin\Debug\net5.0\zh-Hans\FSharp.Core.resources.dll
-D:\gitcache\microc\bin\Debug\net5.0\zh-Hant\FSharp.Core.resources.dll
-D:\gitcache\microc\obj\Debug\net5.0\interpc.fsproj.CopyComplete
-D:\gitcache\microc\obj\Debug\net5.0\interpc.genruntimeconfig.cache
+C:\Users\15929\Desktop\编译原理\Microc\obj\Debug\net5.0\interpc.fsprojAssemblyReference.cache
+C:\Users\15929\Desktop\编译原理\Microc\obj\Debug\net5.0\interpc.AssemblyInfoInputs.cache
+C:\Users\15929\Desktop\编译原理\Microc\obj\Debug\net5.0\interpc.AssemblyInfo.fs
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\interpc.exe
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\interpc.deps.json
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\interpc.runtimeconfig.json
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\interpc.runtimeconfig.dev.json
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\interpc.dll
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\interpc.pdb
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\FSharp.Core.dll
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\FsLexYacc.Runtime.dll
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\cs\FSharp.Core.resources.dll
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\de\FSharp.Core.resources.dll
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\es\FSharp.Core.resources.dll
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\fr\FSharp.Core.resources.dll
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\it\FSharp.Core.resources.dll
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\ja\FSharp.Core.resources.dll
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\ko\FSharp.Core.resources.dll
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\pl\FSharp.Core.resources.dll
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\pt-BR\FSharp.Core.resources.dll
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\ru\FSharp.Core.resources.dll
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\tr\FSharp.Core.resources.dll
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\zh-Hans\FSharp.Core.resources.dll
+C:\Users\15929\Desktop\编译原理\Microc\bin\Debug\net5.0\zh-Hant\FSharp.Core.resources.dll
+C:\Users\15929\Desktop\编译原理\Microc\obj\Debug\net5.0\interpc.fsproj.CopyComplete
+C:\Users\15929\Desktop\编译原理\Microc\obj\Debug\net5.0\interpc.dll
+C:\Users\15929\Desktop\编译原理\Microc\obj\Debug\net5.0\interpc.pdb
+C:\Users\15929\Desktop\编译原理\Microc\obj\Debug\net5.0\interpc.genruntimeconfig.cache
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\interpc.exe
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\interpc.deps.json
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\interpc.runtimeconfig.json
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\interpc.runtimeconfig.dev.json
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\interpc.dll
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\interpc.pdb
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\FSharp.Core.dll
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\FsLexYacc.Runtime.dll
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\cs\FSharp.Core.resources.dll
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\de\FSharp.Core.resources.dll
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\es\FSharp.Core.resources.dll
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\fr\FSharp.Core.resources.dll
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\it\FSharp.Core.resources.dll
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\ja\FSharp.Core.resources.dll
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\ko\FSharp.Core.resources.dll
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\pl\FSharp.Core.resources.dll
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\pt-BR\FSharp.Core.resources.dll
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\ru\FSharp.Core.resources.dll
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\tr\FSharp.Core.resources.dll
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\zh-Hans\FSharp.Core.resources.dll
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\bin\Debug\net5.0\zh-Hant\FSharp.Core.resources.dll
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\obj\Debug\net5.0\interpc.fsprojAssemblyReference.cache
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\obj\Debug\net5.0\interpc.AssemblyInfoInputs.cache
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\obj\Debug\net5.0\interpc.AssemblyInfo.fs
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\obj\Debug\net5.0\interpc.fsproj.CopyComplete
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\obj\Debug\net5.0\interpc.dll
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\obj\Debug\net5.0\interpc.pdb
+C:\Users\cs\Desktop\编译原理实验报告\Microc-wyk (1)\Microc-wyk\obj\Debug\net5.0\interpc.genruntimeconfig.cache
