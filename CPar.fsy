@@ -203,7 +203,7 @@ AtExprNotAccess:
   | Bool                                { CstB $1             }
   | Float                               { CstF $1             }
   | String                              { CstS $1             }
-  | Char                                { CstC ($1)           }    
+  | Char                                { CstC $1          }    
   | LPAR ExprNotAccess RPAR             { $2                  } 
   | AMP Access                          { Addr $2             } // 取地址
 ;

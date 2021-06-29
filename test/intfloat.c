@@ -15,6 +15,6 @@ void main()
     c = 5;
     int d;
     d = 3;
-    printf("%f",c%d);
-    printf("%f",d%c);
+    printf("%d",c%d);
+    printf("%d",d%c);
 }

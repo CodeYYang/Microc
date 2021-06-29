@@ -1423,7 +1423,7 @@ let _fsyacc_reductions ()  =    [|
                 (
                    (
 # 206 "CPar.fsy"
-                                                               CstC (_1)           
+                                                               CstC _1          
                    )
 # 206 "CPar.fsy"
                  : 'gentype_AtExprNotAccess));
