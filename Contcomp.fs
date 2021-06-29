@@ -104,6 +104,13 @@ let rec addCST i C =
     | (_, IFNZRO lab :: C1) -> addGOTO lab C1
     | _                     -> CSTI i :: C
 
+
+
+//添加float
+let rec addCSTF i C =
+    match (i, C) with
+    | _                     -> (CSTF (System.BitConverter.ToInt32(System.BitConverter.GetBytes(float32(i)), 0))) :: C
+
 let rec addCSTC i C =
     match (i, C) with
     | _                     -> (CSTC ((int32)(System.BitConverter.ToInt16(System.BitConverter.GetBytes(char(i)), 0)))) :: C
@@ -131,6 +138,8 @@ let rec lookup env x =
 type Var = 
     | Glovar of int                   (* absolute address in stack           *)
     | Locvar of int                   (* address relative to b ottom of frame *)
+    | StructMemberLoc of int
+
 
 
 (* The variable environment keeps track of global and local variables, and 
@@ -269,20 +278,22 @@ and cExpr (e : expr) (varEnv : VarEnv) (funEnv : FunEnv) (C : instr list) : inst
     | CstI i         -> addCST i C
     | ConstChar i    -> addCST (int i) C   //字符
     | ConstString s     -> addCST (int s) C     //字符串
+    | ConstFloat i      -> addCSTF i C     //浮点数
     | Addr acc       -> cAccess acc varEnv funEnv C
     | Print(ope,e1)  -> // print("%d",i)
-      cExpr e1 varEnv funEnv
-           (match ope with
-            | "%d"  -> PRINTI :: C
-            | "%c"  -> PRINTC :: C
-            | _        -> failwith "unknown primitive 1")
+        cExpr e1 varEnv funEnv
+               (match ope with
+                | "%d"  -> PRINTI :: C
+                | "%c"  -> PRINTC :: C
+                | "%f"  -> PRINTF :: C
+                | _        -> failwith "unknown primitive 1")
     | Prim1(ope, e1) ->
-      cExpr e1 varEnv funEnv
-          (match ope with
-           | "!"      -> addNOT C
-           | "printi" -> PRINTI :: C
-           | "printc" -> PRINTC :: C
-           | _        -> failwith "unknown primitive 1")
+        cExpr e1 varEnv funEnv
+            (match ope with
+             | "!"      -> addNOT C
+             | "printi" -> PRINTI :: C
+             | "printc" -> PRINTC :: C
+             | _        -> failwith "unknown primitive 1")
     | Prim2(ope, e1, e2) ->
       cExpr e1 varEnv funEnv
         (cExpr e2 varEnv funEnv
@@ -298,7 +309,49 @@ and cExpr (e : expr) (varEnv : VarEnv) (funEnv : FunEnv) (C : instr list) : inst
             | ">="  -> LT   :: addNOT C
             | ">"   -> SWAP :: LT :: C
             | "<="  -> SWAP :: LT :: addNOT C
-            | _     -> failwith "unknown primitive 2"))       
+            | _     -> failwith "unknown primitive 2")) 
+    | Prim3 (e1, e2, e3) ->
+      let (jumpend, C1) = makeJump C
+      let (labelse, C2) = addLabel (cExpr e3 varEnv funEnv C1)
+      cExpr e1 varEnv funEnv (IFZERO labelse 
+      :: cExpr e2 varEnv funEnv (addJump jumpend C2))
+   
+    | SimpleOpt(ope,acc,e)->             
+        cExpr e varEnv funEnv  
+            (match ope with
+            | "+=" -> 
+                let ass = Assign (acc,Prim2("+",Access acc, e))
+                cExpr ass varEnv funEnv (addINCSP -1 C)
+            | "-=" ->
+                let ass = Assign (acc,Prim2("-",Access acc, e))
+                cExpr ass varEnv funEnv (addINCSP -1 C)
+            | "++I" -> 
+                let ass = Assign (acc,Prim2("+",Access acc, e))
+                let C1 = cExpr ass varEnv funEnv C
+                CSTI 1 :: ADD :: (addINCSP -1 C1)
+            | "I++" -> 
+                let ass = Assign (acc,Prim2("+",Access acc, e))
+                let C1 = cExpr ass varEnv funEnv C
+                CSTI 1 :: ADD :: (addINCSP -1 C1)
+            | "--I" ->
+                let ass = Assign (acc,Prim2("-",Access acc, e))
+                let C1 = cExpr ass varEnv funEnv C
+                CSTI 1 :: SUB :: (addINCSP -1 C1)  
+            | "I--" ->
+                let ass = Assign (acc,Prim2("-",Access acc, e))
+                let C1 = cExpr ass varEnv funEnv C
+                CSTI 1 :: SUB :: (addINCSP -1 C1)      
+            | "*=" -> 
+                let ass = Assign (acc,Prim2("*",Access acc, e))
+                cExpr ass varEnv funEnv (addINCSP -1 C)
+            | "/=" ->
+                let ass = Assign (acc,Prim2("/",Access acc, e))
+                cExpr ass varEnv funEnv (addINCSP -1 C)
+            | "%=" ->
+                let ass = Assign (acc,Prim2("%",Access acc, e))
+                cExpr ass varEnv funEnv (addINCSP -1 C)
+            | _         -> failwith "Error: unknown unary operator")
+      
     | Andalso(e1, e2) ->
       match C with
       | IFZERO lab :: _ ->
