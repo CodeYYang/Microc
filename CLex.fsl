@@ -70,6 +70,8 @@ rule Token = parse          // 每个 规则rule 会生成为一个函数，函�
   
   | ['0'-'9']+'.'['0'-'9']+      { CSTFLOAT (float (lexemeAsString lexbuf)) }
 
+  | ['\'']['a'-'z''A'-'Z''0'-'9']['\'']            
+                    { try let single = lexemeAsString lexbuf in CSTCHAR (System.Char.Parse(single.Substring(1, 1))) with ex -> failwith "Char literal error." }
   | ['a'-'z''A'-'Z']['a'-'z''A'-'Z''0'-'9']*
                     { keyword (lexemeAsString lexbuf) } //标识符处理
                                                        //先查是否是关键字，是则返回对应关键字的Token
